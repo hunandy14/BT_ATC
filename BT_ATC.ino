@@ -4,6 +4,9 @@ Date : 2017/04/14
 By   : CharlotteHonG
 Final: 2017/04/14
 *****************************************************************/
+// 藍芽腳位
+// BT_pin::BT_pin(int rx=2, int tx=3, int vcc=4, int key=5):
+//     rx(rx), tx(tx), vcc(vcc), key(key){}
 
 // 說明文檔
 void Help(){
