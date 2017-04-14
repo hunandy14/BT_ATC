@@ -1,5 +1,5 @@
 /*****************************************************************
-Name : 
+Name :
 Date : 2017/04/14
 By   : CharlotteHonG
 Final: 2017/04/14
@@ -17,7 +17,7 @@ void Help(){
       /PH     Vcc ON
       /HELP   Return Help
       /STA    Return Key and Vcc now static
-    
+
                 By:Charlotte.HonG
     */
 
@@ -33,15 +33,14 @@ void Help(){
     Serial.println("  /STA    Return Key and Vcc now static");
     Serial.println("");
     Serial.println("            By:Charlotte.HonG");
-
-
 }
 //----------------------------------------------------------------
-// 藍芽腳位
+// 藍芽腳位初始化建構子
 BT_pin::BT_pin(int rx, int tx, int vcc, int key):
     rx(rx), tx(tx), vcc(vcc), key(key)
 {}
 //----------------------------------------------------------------
+// 藍芽指令初始化建構子
 BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
     ,BT_Uart(pin.tx, pin.rx)
 {
@@ -81,6 +80,7 @@ void BT_ATC::Static(){
     Serial.println(digitalRead(pin.vcc));
 }
 //----------------------------------------------------------------
+// 傳輸
 void BT_ATC::SeriRead(){
     if (Serial.available()) {
         delay(1);
@@ -93,12 +93,12 @@ void BT_ATC::BlueRead(){
         Serial.print(static_cast<char>(BT_Uart.read()));
     }
 }
-// Uart互通
 void BT_ATC::Uart(){
     SeriRead();
     BlueRead();
 }
 //----------------------------------------------------------------
+// 掃描 Seri 字串
 void BT_ATC::SeriScan(){
     BlueRead();
     if (Serial.available()) { // 如果有字近來

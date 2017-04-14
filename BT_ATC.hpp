@@ -16,37 +16,33 @@ struct BT_pin{
     int rx, tx;
     int vcc, key;
 };
+
 // 藍芽AT指令物件
 class BT_ATC{
 public:// 建構子
     BT_ATC(BT_pin pin);
     void begin(size_t rate);
 public:
-    // 電源控制
-    void pow(bool sta);
-    void key(bool sta);
-    // 進入AT模式
-    void AT_Mode();
-    // 重新啟動
-    void Reboot();
-    // 查詢狀態
-    void Static();
-public://讀寫Uart
-    void SeriRead();
-    void BlueRead();
-    // Uart互通
-    void Uart();
-public: // 掃描字串
-    void SeriScan();
-    // 執行命令
-    void commander();
+    void pow(bool sta); // 電源控制
+    void key(bool sta); // 電源控制
+    void AT_Mode();     // 進入AT模式
+    void Reboot();      // 重新啟動
+    void Static();      // 查詢狀態
+public:
+    void SeriRead();    // 讀取並發送 Seri --> Seri
+    void BlueRead();    // 讀取並發送 bule --> bule
+    void Uart();        // 兩者互通
+public:
+    void SeriScan();    // 掃描 Seri 字串
+    void commander();   // 執行命令
 public: // 資料成員
     BT_pin pin;
-    Timer t;
     SoftwareSerial BT_Uart;
     char cmd[8];
     String str;
+    Timer t;
 };
+
 
 #endif
 
