@@ -22,7 +22,7 @@ void setup() {
     Help();
     hc05.Static();
     hc05.begin(Rate);
-    // hc05.AT_Mode(3);
+    hc05.AT_Mode();
 }
 
 void loop() {

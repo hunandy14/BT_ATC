@@ -60,22 +60,22 @@ void BT_ATC::key(bool sta){
     digitalWrite(pin.key, sta);
 }
 // 進入AT模式
-void BT_ATC::AT_Mode(size_t delaytime=3){
+void BT_ATC::AT_Mode(){
     pow(0);
     key(1);
-    delay(delaytime);
+    delay(3);
     pow(1);
 }
 // 重新啟動
-void BT_ATC::Reboot(size_t delaytime=3){
+void BT_ATC::Reboot(){
     pow(0);
     key(0);
-    delay(delaytime);
+    delay(3);
     pow(1);
 }
 // 查詢狀態
 void BT_ATC::Static(){
-    Serial.print("Key static =  ");
+    Serial.print("Key static = ");
     Serial.println(digitalRead(pin.key));
     Serial.print("Vcc static = ");
     Serial.println(digitalRead(pin.vcc));

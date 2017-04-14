@@ -26,9 +26,9 @@ public:
     void pow(bool sta);
     void key(bool sta);
     // 進入AT模式
-    void AT_Mode(size_t delaytime);
+    void AT_Mode();
     // 重新啟動
-    void Reboot(size_t delaytime);
+    void Reboot();
     // 查詢狀態
     void Static();
 public://讀寫Uart
