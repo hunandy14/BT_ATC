@@ -14,7 +14,7 @@ NAME:Charlotte.HonG
 // 藍芽腳位結構
 struct BT_pin{
     BT_pin(int rx=2, int tx=3, int vcc=4, int key=5):
-        rx(rx), tx(tx), vcc(vcc), key(key){}
+        rx(rx), tx(tx), vcc(vcc), key(key) {}
     int rx, tx;
     int vcc, key;
 };
@@ -22,9 +22,14 @@ struct BT_pin{
 class BT_ATC{
 public:// 建構子
     BT_ATC(BT_pin pin = BT_pin()) :pin(pin)
-        ,SeBT(pin.tx, pin.rx){}
+        ,BT_Uart(pin.tx, pin.rx)
+    {
+        pinMode(BT_Key, OUTPUT);
+        pinMode(BT_Vcc, OUTPUT);
+        this->pow(1);
+    }
     void begin(size_t rate){
-        SeBT.begin(rate);
+        BT_Uart.begin(rate);
     }
 public:
     // 電源控制
@@ -59,13 +64,13 @@ public://讀寫Uart
     void SeriRead(){
         if (Serial.available()) {
             delay(1);
-            SeBT.print(static_cast<char>(Serial.read()));
+            BT_Uart.print(static_cast<char>(Serial.read()));
         }
     }
     void BlueRead(){
-        if (SeBT.available()) {
+        if (BT_Uart.available()) {
             delay(1);
-            Serial.print(static_cast<char>(SeBT.read()));
+            Serial.print(static_cast<char>(BT_Uart.read()));
         }
     }
     // Uart互通
@@ -82,7 +87,7 @@ public: // 掃描字串
                 // 沒有偵測到斜線才給藍芽
                 if(strncmp(cmd,"/",1)){
                     cmd_flag=0; // 沒有斜線
-                    SeBT.print(cmd[i]);
+                    BT_Uart.print(cmd[i]);
                 }
                 delay(3);
             } cmd[i]='\0';
@@ -109,13 +114,13 @@ public: // 掃描字串
 public: // 資料成員
     BT_pin pin;
     Timer t;
-    SoftwareSerial SeBT;
+    SoftwareSerial BT_Uart;
     char cmd[8];
     String str;
 };
 
 BT_ATC hc05; // default is BT_pin(2,3,4,5);
-auto &BT = hc05.SeBT; // use BT.prnt()
+auto &BT = hc05.BT_Uart; // use BT.prnt()
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -126,14 +131,10 @@ void setup() {
     Serial.println("Now key is LOW.");
 
     hc05.begin(38400);
-    pinMode(BT_Key, OUTPUT);
-    pinMode(BT_Vcc, OUTPUT);
     // hc05.AT_Mode();
-    hc05.pow(1);
 }
 
 void loop() {
-    // hc05.Uart();
     hc05.SeriScan();
     hc05.BlueRead();
 }
