@@ -14,19 +14,18 @@ NAME:Charlotte.HonG
 
 BT_pin hc05_pin(BT_RX, BT_TX, BT_Vcc, BT_Key);
 BT_ATC hc05(hc05_pin);
-auto &BT = hc05.BT_Uart; // use BT.print()
+auto& BT = hc05.BT_Uart; // use BT.print()
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
-    Serial.println("Welcome Blueteeth_ATCommand");
+    Serial.println("\n\nWelcome Blueteeth_ATCommand");
     Help();
     hc05.Static();
     hc05.begin(Rate);
-    hc05.AT_Mode();
+    // hc05.AT_Mode();
 }
 
 void loop() {
     hc05.SeriScan();
-    hc05.BlueRead();
 }
 //----------------------------------------------------------------

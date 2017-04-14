@@ -100,6 +100,7 @@ void BT_ATC::Uart(){
 }
 //----------------------------------------------------------------
 void BT_ATC::SeriScan(){
+    BlueRead();
     if (Serial.available()) { // 如果有字近來
         bool cmd_flag=1; size_t i;
         for (i=0 ; Serial.available() > 0; ++i){
@@ -122,12 +123,13 @@ void BT_ATC::commander(){
     Serial.print("Cmd: ");
     String str = cmd;
 
-    if(str == "/ATM\r"){
+    if(str == "/ATM\r\n"){
         Serial.println("AT_Mode");
         AT_Mode();
     }
-    else if(str == "/RE\r"){
+    else if(str == "/RE\r\n"){
         Serial.println("Reboot");
         Reboot();
     }
 }
+//----------------------------------------------------------------
