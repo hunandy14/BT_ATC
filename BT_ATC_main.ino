@@ -18,14 +18,21 @@ auto& BT = hc05.BT_Uart; // use BT.print()
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
-    Serial.println("\n\nWelcome Blueteeth_ATCommand");
+    Serial.println("\n");
+    Serial.println("Welcome Blueteeth_ATCommand");
     Help();
     hc05.Static();
     hc05.begin(Rate);
     // hc05.AT_Mode();
+
+    // 自動設定參數
+    BT_info hc05_info;
+    // hc05.Info_Set(hc05_info);
 }
 
 void loop() {
-    hc05.SeriScan();
+    // hc05.SeriScan();
+    hc05.BlueOK();
+    // BT.print("AT\r\n");
 }
 //----------------------------------------------------------------
