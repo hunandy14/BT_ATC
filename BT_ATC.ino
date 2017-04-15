@@ -1,9 +1,11 @@
 /*****************************************************************
-Blue_ATCommand
-DATA:20150423
-Ver3:20150425_12
-NAME:Charlotte.HonG
+Name : Blue_ATCommand
+Date : 2015/04/23
+By   : CharlotteHonG
+Final: 2017/04/15
+軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
+
 #include "BT_ATC.hpp"
 
 #define BT_RX 2
