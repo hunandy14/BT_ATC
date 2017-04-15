@@ -47,7 +47,7 @@ public: // 資料成員
     BT_pin pin;
     SoftwareSerial BT_Uart;
     char cmd[16];
-    char bt_msg[16];
+    char bt_msg[32];
     String str;
     Timer t;
 };
