@@ -38,8 +38,8 @@ public:
     void BlueRead();    // 讀取並發送 bule --> bule
     void Uart();        // 兩者互通
 public:
-    void SeriScan();    // 掃描 Seri 字串並發送
     void Commander();   // 執行命令
+    void SeriScan();    // 掃描 Seri 字串並發送
     void BlueOK();      // 掃描藍芽 OK 確認命令有效
 public:
     void Info_Set(BT_info info);

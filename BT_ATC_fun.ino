@@ -98,25 +98,6 @@ void BT_ATC::Uart(){
     BlueRead();
 }
 //----------------------------------------------------------------
-// 掃描 Seri 字串並發送
-void BT_ATC::SeriScan(){
-    if (Serial.available()) { // 如果有字近來
-        bool cmd_flag=1; size_t i;
-        for (i=0 ; Serial.available() > 0; ++i){
-            cmd[i] = Serial.read();
-            // 沒有偵測到斜線才給藍芽
-            if(strncmp(cmd,"/",1)){
-                cmd_flag=0; // 沒有斜線
-                BT_Uart.print(cmd[i]);
-            }
-            delay(3);
-        } cmd[i]='\0';
-        // 偵測到斜線才執行命令
-        if(cmd_flag){
-            Commander();
-        }
-    }
-}
 // 執行命令
 void BT_ATC::Commander(){
     Serial.print("Cmd: ");
@@ -131,12 +112,31 @@ void BT_ATC::Commander(){
         Reboot();
     }
 }
-// 捕捉 OK 信息
+// 掃描 Seri 字串並發送
+void BT_ATC::SeriScan(){
+    // 如果有字近來
+    if (Serial.available()) {
+        size_t i=0;
+        // 讀取 Serial字串
+        for (i=0 ; Serial.available() > 0; ++i){
+            cmd[i] = Serial.read();
+            delay(3);
+        } cmd[i]='\0';
+
+        // 沒有偵測到斜線才給藍芽
+        if(strncmp(cmd,"/",1)){
+            BT_Uart.print(cmd);
+        } else { // 偵測到斜線才執行命令
+            Commander();
+        }
+    }
+}
+// 捕捉藍芽 OK 信息
 void BT_ATC::BlueOK(){
-    // SeriRead();
-    if (BT_Uart.available()){ // 如果有字近來
-        bool cmd_flag=1; size_t i;
-        // 讀取字串
+    // 如果有字近來
+    if (BT_Uart.available()){
+        size_t i=0;
+        // 讀取藍芽字串
         for (i=0 ; BT_Uart.available() > 0; ++i){
             bt_msg[i] = BT_Uart.read();
             delay(3);
@@ -147,7 +147,7 @@ void BT_ATC::BlueOK(){
         pos = pos<0? 0: pos; // 修正小於 0 可能
 
         // 沒有偵測到 OK 直接轉送藍芽信息
-        if(strncmp((bt_msg),"OK", 2)){
+        if(strncmp((bt_msg+pos),"OK", 2)){
             Serial.print(bt_msg);
         } else { // 偵測到結尾 OK
             Serial.println("");
@@ -158,25 +158,6 @@ void BT_ATC::BlueOK(){
         }
     }
 }
-
-// void BT_ATC::BlueOK(){
-//     if (BT_Uart.available()) { // 如果有字近來
-//         bool cmd_flag=1; size_t i;
-//         for (i=0 ; BT_Uart.available() > 0; ++i){
-//             bt_msg[i] = BT_Uart.read();
-//             // 沒有偵測到 OK
-//             if(strncmp(bt_msg,"OK", 2)){
-//                 Serial.println("Not OK");
-//                 cmd_flag=0; // 沒有 OK
-//             }
-//             delay(3);
-//         } bt_msg[i]='\0';
-//         // 偵測到 OK 命令
-//         if(cmd_flag){
-//             Serial.println("Cmd Success");
-//         }
-//     }
-// }
 //----------------------------------------------------------------
 void BT_ATC::Info_Set(BT_info info){
     AT_Mode();
