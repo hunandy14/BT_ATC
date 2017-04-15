@@ -123,7 +123,7 @@ void BT_ATC::SeriScan(){
             delay(3);
         } cmd[i]='\0';
 
-        // 沒有偵測到斜線才給藍芽
+        // 沒有偵測到斜線轉送信息給藍芽
         if(strncmp(cmd,"/",1)){
             BT_Uart.print(cmd);
         } else { // 偵測到斜線才執行命令
