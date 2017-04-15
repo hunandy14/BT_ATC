@@ -36,3 +36,7 @@ Command:
 #### STA
 查詢目前腳位狀態
 
+#### HELP
+在ArduinoG上打印說明
+
+
