@@ -18,7 +18,7 @@ auto& BT = hc05.BT_Uart; // use BT.print()
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
-    Serial.println("\n");
+    Serial.println("");
     Serial.println("Welcome Blueteeth_ATCommand");
     Help();
     hc05.Static();

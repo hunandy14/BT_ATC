@@ -10,6 +10,9 @@ Final: 2017/04/12
 #include <SoftwareSerial.h>
 #include "Timer.h"
 
+// 說明文檔
+void Help();
+
 // 藍芽腳位結構
 struct BT_pin{
     BT_pin(int rx, int tx, int vcc, int key);
@@ -42,7 +45,7 @@ public:
     void SeriScan();    // 掃描 Seri 字串並發送
     void BlueOK();      // 掃描藍芽 OK 確認命令有效
 public:
-    void Info_Set(BT_info info);
+    void Info_Set(BT_info info);  // 批次傳送所有命令
 public: // 資料成員
     BT_pin pin;
     SoftwareSerial BT_Uart;

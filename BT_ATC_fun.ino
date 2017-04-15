@@ -6,32 +6,29 @@ Final: 2017/04/14
 *****************************************************************/
 // 說明文檔
 void Help(){
+
     /*
     Command:
       /ATM    AT Command Mode
-      /RE     Vcc Reset
-      /AL     Auto Link Mode
+      /RE     Reboot to AutoLinkMode
       /KL     Key Power OFF
       /KH     Key Power ON
-      /PL     Vcc OFF
-      /PH     Vcc ON
-      /HELP   Return Help
+      /VL     Vcc OFF
+      /VH     Vcc ON
       /STA    Return Key and Vcc now static
-
+      /HELP   Return Help
                 By:Charlotte.HonG
     */
 
     Serial.println("Command:");
     Serial.println("  /ATM    AT Command Mode");
-    Serial.println("  /RE     Vcc Reset");
-    Serial.println("  /AL     Auto Link Mode");
+    Serial.println("  /RE     Reboot to AutoLinkMode");
     Serial.println("  /KL     Key Power OFF");
     Serial.println("  /KH     Key Power ON");
-    Serial.println("  /PL     Vcc OFF");
-    Serial.println("  /PH     Vcc ON");
-    Serial.println("  /HELP   Return Help");
+    Serial.println("  /VL     Vcc OFF");
+    Serial.println("  /VH     Vcc ON");
     Serial.println("  /STA    Return Key and Vcc now static");
-    Serial.println("");
+    Serial.println("  /HELP   Return Help");
     Serial.println("            By:Charlotte.HonG");
 }
 //----------------------------------------------------------------
@@ -102,7 +99,7 @@ void BT_ATC::Uart(){
 void BT_ATC::Commander(){
     Serial.print("Cmd: ");
     String str = cmd;
-
+    // 重新啟動模式
     if(str == "/ATM\r\n"){
         Serial.println("AT_Mode");
         AT_Mode();
@@ -110,6 +107,30 @@ void BT_ATC::Commander(){
     else if(str == "/RE\r\n"){
         Serial.println("Reboot");
         Reboot();
+    }
+    // 電源控制
+    else if(str == "/VH\r\n"){
+        Serial.println("Vcc Power ON");
+        pow(1);
+    }
+    else if(str == "/VL\r\n"){
+        Serial.println("Vcc Power OFF");
+        pow(0);
+    }
+    else if(str == "/KH\r\n"){
+        Serial.println("Key Power ON");
+        key(1);
+    }
+    else if(str == "/KL\r\n"){
+        Serial.println("Key Power OFF");
+        key(0);
+    }
+    // 查詢狀態
+    else if(str == "/STA\r\n"){
+        Static();
+    }
+    else if(str == "/HELP\r\n"){
+        Help();
     }
 }
 // 掃描 Seri 字串並發送
