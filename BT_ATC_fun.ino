@@ -12,10 +12,10 @@ void Help(){
     Command:
       /ATM    AT Command Mode
       /RE     Reboot to AutoLinkMode
-      /KL     Key Power OFF
-      /KH     Key Power ON
-      /VL     Vcc OFF
       /VH     Vcc ON
+      /VL     Vcc OFF
+      /KH     Key Power ON
+      /KL     Key Power OFF
       /STA    Return Key and Vcc now static
       /HELP   Return Help
                 By:Charlotte.HonG
@@ -24,10 +24,10 @@ void Help(){
     Serial.println("Command:");
     Serial.println("  /ATM    AT Command Mode");
     Serial.println("  /RE     Reboot to AutoLinkMode");
-    Serial.println("  /KL     Key Power OFF");
-    Serial.println("  /KH     Key Power ON");
-    Serial.println("  /VL     Vcc OFF");
     Serial.println("  /VH     Vcc ON");
+    Serial.println("  /VL     Vcc OFF");
+    Serial.println("  /KH     Key Power ON");
+    Serial.println("  /KL     Key Power OFF");
     Serial.println("  /STA    Return Key and Vcc now static");
     Serial.println("  /HELP   Return Help");
     Serial.println("            By:Charlotte.HonG");
