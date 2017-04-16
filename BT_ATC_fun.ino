@@ -7,7 +7,6 @@ Final: 2017/04/14
 *****************************************************************/
 // 說明文檔
 void Help(){
-
     /*
     Command:
       /ATM    AT Command Mode
@@ -20,7 +19,6 @@ void Help(){
       /HELP   Return Help
                 By:Charlotte.HonG
     */
-
     Serial.println("Command:");
     Serial.println("  /ATM    AT Command Mode");
     Serial.println("  /RE     Reboot to AutoLinkMode");
@@ -31,6 +29,24 @@ void Help(){
     Serial.println("  /STA    Return Key and Vcc now static");
     Serial.println("  /HELP   Return Help");
     Serial.println("            By:Charlotte.HonG");
+}
+//----------------------------------------------------------------
+Once::Once(): fp(nullptr), st(false){};
+Once::Once(fun_p callback): fp(callback), st(false){}
+// 只執行一次事後設定的
+void Once::go(fun_p callback){
+    if(st==false) {
+        st=true;
+        fp=callback;
+        fp();
+    }
+}
+// 只執行一次建構設定的
+void Once::go_set(){
+    if(st==false) {
+        st=true;
+        fp();
+    }
 }
 //----------------------------------------------------------------
 // 藍芽腳位初始化建構子
@@ -180,10 +196,15 @@ void BT_ATC::BlueOK(){
         }
     }
 }
+
 //----------------------------------------------------------------
-void BT_ATC::Info_Set(BT_info info){
-    AT_Mode();
-    Serial.println("Info_Set\r\n");
+void BT_ATC::Info_Set(){
+    BlueOK();
+    // onedo[0]();
+    // Serial.println("Info_Set\r\n");
     // BT_Uart.print("AT\r\n");
+}
+void BT_ATC::AT_ok(){
+
 }
 //----------------------------------------------------------------
