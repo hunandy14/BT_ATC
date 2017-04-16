@@ -74,7 +74,7 @@ public: // 資料成員
     char cmd[16];
     char bt_msg[32];
     String str;
-    Timer t;
+    // Timer t;
 };
 
 #endif
