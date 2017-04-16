@@ -1,3 +1,37 @@
+## 2017/04/16
+class funcion point 的使用方法有點特別
+
+```cpp
+class A{
+public:
+    void fun(){
+        cout << "A::fun()" << endl;
+    }
+};
+int main(int argc, char const *argv[]){
+    A a;
+    a.fun();
+
+    using fp = void(A::*)(void);
+    fp f= A::fun;
+
+    (a.*f)();
+}
+```
+
+改了之後發現一件事情，函式成員的使用會交錯，發現可以直接在前面寫
+
+```cpp
+class BT_ATC;
+```
+
+這樣就能找到了
+
+一切都完善了之後發現還有一個大問題，呼叫函式成員還要有一個物件，沒有那物件空有指標也沒用
+因此我的委託function執行出了問題，他沒有物件
+
+
+
 ## 2017/04/15
 ### WTF 為什麼從第一次送含關鍵字的命令會跑出一個0
 而且如果沒有加
