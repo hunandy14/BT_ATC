@@ -63,7 +63,8 @@ public:
 public:
     void Commander();   // 執行命令
     void SeriScan();    // 掃描 Seri 字串並發送
-    void BlueOK();      // 掃描藍芽 OK 確認命令有效
+    bool BlueOK();      // 掃描藍芽 OK 確認命令有效
+    void Cmd_Uart();
 public:
     void Info_Set();  // 批次傳送所有命令
     void AT_ok();
@@ -73,11 +74,7 @@ public: // 資料成員
     char cmd[16];
     char bt_msg[32];
     String str;
-    bool cmdok=0;
-    bool ready=0;
     Timer t;
-
-    // Once onedo[10];
 };
 
 #endif

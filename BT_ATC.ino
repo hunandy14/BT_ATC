@@ -21,7 +21,7 @@ auto& BT = hc05.BT_Uart; // use BT.print()
 void fun(){
     Serial.println("Test");
 }
-Timer tt;
+Timer t1;
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -31,28 +31,50 @@ void setup() {
     hc05.Static();
     hc05.begin(Rate);
     hc05.AT_Mode();
-
     // 自動設定參數
-    BT_info hc05_info;
-    // hc05.Info_Set(hc05_info);
-    tt.after(1000, name);
+    setting();
+    t1.after(1000, checkinfo);
 }
-
-void name(){
+void setting(){
+    int delaytime=50;
+    BT.print("AT+NAME=CHG\r\n");
+    delay(delaytime);
+    BT.print("AT+UART=38400,0,0\r\n");
+    delay(delaytime);
+    BT.print("AT+PSWD=0000\r\n");
+    delay(delaytime);
+    BT.print("AT+ROLE=0\r\n");
+    delay(delaytime);
+    BT.print("AT+RMAAD\r\n");
+    delay(delaytime);
+    BT.print("AT+ADCN?\r\n");
+    delay(delaytime);
+    BT.print("AT+ADDR?\r\n");
+    delay(delaytime);
+}
+void checkinfo(){
+    int delaytime=50;
     BT.print("AT+NAME\r\n");
-    Serial.print("AT+NAME\r\n");
+    delay(delaytime);
+    BT.print("AT+UART\r\n");
+    delay(delaytime);
+    BT.print("AT+PSWD\r\n");
+    delay(delaytime);
+    BT.print("AT+ROLE\r\n");
+    delay(delaytime);
+    // 初始化
+    hc05.key(0);
+    BT.print("AT+INIT\r\n");
+    delay(delaytime);
 }
 //----------------------------------------------------------------
 // Once a[10]{name};
 
-void loop() {
-    tt.update();
-    hc05.SeriScan();
-    // hc05.BlueOK();
-    
-    using fun_p = void(BT_ATC::*)();
+void set_fun(){
 
-    // b.go_set();
-    hc05.Info_Set();
+}
+void loop() {
+    t1.update();
+    hc05.Cmd_Uart();
 }
 //----------------------------------------------------------------

@@ -78,6 +78,10 @@ void BT_ATC::AT_Mode(){
     key(1);
     delay(3);
     pow(1);
+    //等待開啟
+    Serial.println("Wait AT_Mode...");
+    delay(1000);
+    Serial.println("Now AT_Mode is ready.");
 }
 // 重新啟動
 void BT_ATC::Reboot(){
@@ -85,6 +89,10 @@ void BT_ATC::Reboot(){
     key(0);
     delay(3);
     pow(1);
+    //等待開啟
+    Serial.println("Wait Reboot...");
+    delay(1000);
+    Serial.println("Now is ready.");
 }
 // 查詢狀態
 void BT_ATC::Static(){
@@ -170,7 +178,7 @@ void BT_ATC::SeriScan(){
     }
 }
 // 捕捉藍芽 OK 信息
-void BT_ATC::BlueOK(){
+bool BT_ATC::BlueOK(){
     // 如果有字近來
     if (BT_Uart.available()){
         size_t i=0;
@@ -193,16 +201,18 @@ void BT_ATC::BlueOK(){
             Serial.println("==================");
             Serial.print(bt_msg);
             Serial.println("==================");
+            return 1;
         }
     }
+    return 0;
 }
-
+void BT_ATC::Cmd_Uart(){
+    SeriScan();
+    BlueOK();
+}
 //----------------------------------------------------------------
 void BT_ATC::Info_Set(){
-    BlueOK();
-    // onedo[0]();
-    // Serial.println("Info_Set\r\n");
-    // BT_Uart.print("AT\r\n");
+
 }
 void BT_ATC::AT_ok(){
 
