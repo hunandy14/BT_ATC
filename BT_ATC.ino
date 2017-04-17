@@ -22,6 +22,7 @@ void fun(){
     Serial.println("Test");
 }
 Timer t1;
+
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -32,9 +33,29 @@ void setup() {
     hc05.begin(Rate);
     hc05.AT_Mode();
     // 自動設定參數
-    setting();
-    t1.after(1000, checkinfo);
+    // setting();
+    // t1.after(1000, checkinfo);
 }
+//----------------------------------------------------------------
+Once Slave_setting[]{
+    "AT+NAME=CHG",
+    "AT+NAME",
+    "AT+UART=38400,0,0",
+    "AT+ROLE=0",
+    "AT+RMAAD",
+    "AT+ADCN?",
+    "AT+ADDR?"
+ };
+
+int i=0;
+void loop() {
+    t1.update();
+    hc05.SeriScan();
+
+    Slave_setting[i].go_cmd(hc05);
+    i += hc05.BlueOK();
+}
+//----------------------------------------------------------------
 void setting(){
     int delaytime=50;
     BT.print("AT+NAME=CHG\r\n");
@@ -67,14 +88,3 @@ void checkinfo(){
     BT.print("AT+INIT\r\n");
     delay(delaytime);
 }
-//----------------------------------------------------------------
-// Once a[10]{name};
-
-void set_fun(){
-
-}
-void loop() {
-    t1.update();
-    hc05.Cmd_Uart();
-}
-//----------------------------------------------------------------

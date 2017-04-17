@@ -26,10 +26,16 @@ public:
     Once(fun_p callback);
     void go(fun_p callback);
     void go_set();
+
+    Once(char const *str);
+    void go_cmd(BT_ATC & rhs);
 public:
     fun_p fp;
     bool st;
+    BT_ATC & bt;
+    char* cmdstr;
 };
+
 
 // 藍芽腳位結構
 struct BT_pin{

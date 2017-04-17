@@ -49,6 +49,16 @@ void Once::go_set(){
     }
 }
 //----------------------------------------------------------------
+// Once::Once(BT_ATC & rhs): bt(rhs){}
+Once::Once(char const *str): cmdstr(str){}
+void Once::go_cmd(BT_ATC & rhs){
+    if(st==false) {
+        st=true;
+        rhs.BT_Uart.print(cmdstr);
+        rhs.BT_Uart.print("\r\n");
+    }
+}
+//----------------------------------------------------------------
 // 藍芽腳位初始化建構子
 BT_pin::BT_pin(int rx, int tx, int vcc, int key):
     rx(rx), tx(tx), vcc(vcc), key(key)
