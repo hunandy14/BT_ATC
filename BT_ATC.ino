@@ -13,10 +13,8 @@ Final: 2017/04/17
 #define BT_Key 5
 #define Rate 38400
 
-// 藍芽腳位設置
-BT_pin hc05_pin(BT_RX, BT_TX, BT_Vcc, BT_Key);
 // AT命令者設置
-BT_ATC hc05(hc05_pin);
+BT_ATC hc05(BT_RX, BT_TX, BT_Vcc, BT_Key);
 auto& BT = hc05.BT_Uart; // use BT.print()
 // 命令設定
 Once Slave[]{
@@ -49,5 +47,6 @@ void setup() {
 int cmd_num=0;
 void loop() {
     hc05.Cmder(Slave, Slavelen);
+    
 }
 //----------------------------------------------------------------

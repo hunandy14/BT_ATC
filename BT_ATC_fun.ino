@@ -67,13 +67,21 @@ void Once::go_atm(BT_ATC & rhs, bool sta){
 
 //----------------------------------------------------------------
 // 藍芽腳位初始化建構子
-BT_pin::BT_pin(int rx, int tx, int vcc, int key):
+BT_ATC::BT_pin::BT_pin(int rx, int tx, int vcc, int key):
     rx(rx), tx(tx), vcc(vcc), key(key)
 {}
 
 
 //----------------------------------------------------------------
 // 藍芽指令初始化建構子
+BT_ATC::BT_ATC(int rx, int tx, int vcc, int key):
+    pin(rx, tx, vcc, key)
+    ,BT_Uart(tx, rx), cmd_num(0)
+{
+    pinMode(BT_Key, OUTPUT);
+    pinMode(BT_Vcc, OUTPUT);
+    this->pow(1);
+}
 BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
     ,BT_Uart(pin.tx, pin.rx), cmd_num(0)
 {

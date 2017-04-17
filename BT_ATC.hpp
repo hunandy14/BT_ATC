@@ -27,7 +27,8 @@ public:
 private:
     fun_p fp;
     bool st;
-public: // 特化 BT_ATC 物件
+// 特化 BT_ATC 物件
+public:
     Once(char const *str);
 private:
     void go_cmd(BT_ATC & rhs);
@@ -35,16 +36,19 @@ private:
     BT_ATC & bt;
     char* cmdstr;
 };
-// 藍芽腳位結構
-struct BT_pin{
-    BT_pin(int rx, int tx, int vcc, int key);
-    int rx, tx;
-    int vcc, key;
-};
+
 // 藍芽AT指令物件
 class BT_ATC{
+private:
+    // 藍芽腳位結構
+    struct BT_pin{
+        BT_pin(int rx, int tx, int vcc, int key);
+        int rx, tx;
+        int vcc, key;
+    };
 public:// 建構子
     BT_ATC(BT_pin pin);
+    BT_ATC(int rx, int tx, int vcc, int key);
     void begin(size_t rate);
 public:
     void pow(bool sta); // 電源控制
@@ -64,9 +68,11 @@ public:
     bool BlueOK(bool NoPri);
     void Cmd_Uart();
     size_t Cmder(Once* hs, size_t len);
-public: // 資料成員
+// 資料成員
+public: 
     BT_pin pin;               // 藍芽腳位
     SoftwareSerial BT_Uart;   // Uart 函式庫物件
+private:
     char cmd[16];             // Seri 命令暫存
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
