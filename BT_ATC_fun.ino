@@ -75,7 +75,7 @@ BT_pin::BT_pin(int rx, int tx, int vcc, int key):
 //----------------------------------------------------------------
 // 藍芽指令初始化建構子
 BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
-    ,BT_Uart(pin.tx, pin.rx)
+    ,BT_Uart(pin.tx, pin.rx), cmd_num(0)
 {
     pinMode(BT_Key, OUTPUT);
     pinMode(BT_Vcc, OUTPUT);
@@ -103,11 +103,15 @@ void BT_ATC::AT_Mode(bool sta){
     // 等待OK
     Serial.println("Wait AT_Mode...");
     delay(1000);
+
+    // 換成這樣莫名其妙的，底下命令 Cmder() 執行就出事
     // while(!BlueOK(false)){
     //     Serial.print(".");
     //     delay(50);
     //     BT_Uart.print("AT\r\n");
     // }Serial.println("");
+
+
     Serial.println("Now AT_Mode is ready.");
     if(sta==0) {
         key(0);
@@ -253,7 +257,7 @@ size_t BT_ATC::Cmder(Once* hs, size_t len){
     if(cmd_num < len) {
         delay(30);
         hs[cmd_num].go_cmd((*this));
-        cmd_num += BlueOK();
+        cmd_num += (int)BlueOK();
         if(cmd_num == len){
             Serial.println("# CMD All ok");
             key(0);

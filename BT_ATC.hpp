@@ -70,7 +70,7 @@ public: // 資料成員
     char cmd[16];             // Seri 命令暫存
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
-    size_t cmd_num=0;         // 執行到第幾個命令
+    int cmd_num;              // 執行到第幾個命令
     Once atm;                 // 委託執行一次ATM
 };
 
