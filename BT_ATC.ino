@@ -7,7 +7,6 @@ Final: 2017/04/17
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
 #include "BT_ATC.hpp"
-
 #define BT_RX 2
 #define BT_TX 3
 #define BT_Vcc 4

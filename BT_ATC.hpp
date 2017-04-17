@@ -13,7 +13,6 @@ Final: 2017/04/17
 
 // 說明文檔
 void Help();
-
 // 只執行一次
 class BT_ATC;
 class Once{
@@ -33,25 +32,12 @@ public: // 特化 BT_ATC 物件
     BT_ATC & bt;
     char* cmdstr;
 };
-
-
-
 // 藍芽腳位結構
 struct BT_pin{
     BT_pin(int rx, int tx, int vcc, int key);
     int rx, tx;
     int vcc, key;
 };
-
-
-
-// 藍芽參數設定
-struct BT_info{
-    char* NAME = "CHG_Auto";
-};
-
-
-
 // 藍芽AT指令物件
 class BT_ATC{
 public:// 建構子
