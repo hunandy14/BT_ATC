@@ -1,5 +1,7 @@
 # BT_ATC
 
+![BT_ATC](https://github.com/hunandy14/BT_ATC/blob/master/BT_ATC.png)
+
 ## 基礎用法
 宣告腳位
 
