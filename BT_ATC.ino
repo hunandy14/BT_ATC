@@ -34,6 +34,8 @@ Once Slave[]{
     "AT+ROLE"
 };
 #define Slavelen sizeof(Slave)/sizeof(Slave[0])
+
+Once atok[]{"AT"};
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -48,5 +50,6 @@ void setup() {
 int cmd_num=0;
 void loop() {
     hc05.Cmder(Slave, Slavelen);
+    // hc05.Cmder(atok, 1);
 }
 //----------------------------------------------------------------

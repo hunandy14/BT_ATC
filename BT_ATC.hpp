@@ -67,6 +67,8 @@ public: // 資料成員
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
     size_t cmd_num=0;         // 執行到第幾個命令
+    bool SeriPri=1;
+    bool BluePri=1;
 };
 
 

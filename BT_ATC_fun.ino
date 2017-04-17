@@ -91,18 +91,13 @@ void BT_ATC::AT_Mode(){
     key(1);
     delay(3);
     pow(1);
-    //等待開啟
+    // 等待OK
     Serial.println("Wait AT_Mode...");
-    while(BlueOK() == 0){
+    while(!BlueOK(false)){
+        Serial.print(".");
+        delay(50);
         BT_Uart.print("AT\r\n");
-        Serial.print("**\n");
-        // BlueOK();
-        // if (BlueOK() == 1){
-        //     break;
-        // }
-    }
-
-    // delay(1000);
+    }Serial.println("");
     Serial.println("Now AT_Mode is ready.");
 }
 // 重新啟動
@@ -202,6 +197,9 @@ void BT_ATC::SeriScan(){
 }
 // 捕捉藍芽 OK 信息
 bool BT_ATC::BlueOK(){
+    return BlueOK(true);
+}
+bool BT_ATC::BlueOK(bool NoPri){
     // 如果有字近來
     if (BT_Uart.available()){
         size_t i=0;
@@ -210,20 +208,21 @@ bool BT_ATC::BlueOK(){
             bt_msg[i] = BT_Uart.read();
             delay(3);
         } bt_msg[i]='\0'; // 補結束字符
-
         // OK的位置
         int pos = strlen(bt_msg)-4;
         pos = pos<0? 0: pos; // 修正小於 0 可能
-
         // 沒有偵測到 OK 直接轉送藍芽信息
         if(strncmp((bt_msg+pos),"OK", 2)){
-            Serial.print(bt_msg);
-        } else { // 偵測到結尾 OK
-            // Serial.println("");
-            // Serial.print("Get OK from BT.\r\n");
-            // Serial.println("==================");
-            Serial.print(bt_msg);
-            // Serial.println("==================");
+            if(NoPri){ // 是否打印回傳信息
+                Serial.print(bt_msg);
+            }
+        }
+        // 偵測到結尾 OK
+        else {
+            if(NoPri){ // 是否打印回傳信息
+                // Serial.print("Get OK from BT.\r\n");
+                Serial.print(bt_msg);
+            }
             return 1;
         }
     }
@@ -237,6 +236,7 @@ size_t BT_ATC::Cmder(Once* hs, size_t len){
     SeriScan();
     // 命令還沒執行完
     if(cmd_num < len) {
+        delay(3);
         hs[cmd_num].go_cmd((*this));
         cmd_num += BlueOK();
         if(cmd_num == len){
