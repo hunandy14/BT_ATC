@@ -1,7 +1,7 @@
 /*****************************************************************
-Name : Blue_ATCommand
+Name : Blue_ATCommand Version 2.0.0
 Date1: 2015/04/23
-Date2: 2017/04/15
+Date2: 2017/04/14
 By   : CharlotteHonG
 Final: 2017/04/17
 軟件新版本：https://github.com/hunandy14/BT_ATC

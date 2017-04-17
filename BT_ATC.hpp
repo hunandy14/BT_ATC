@@ -2,7 +2,7 @@
 Name : Blue_ATCommand
 Date : 2015/04/23
 By   : CharlotteHonG
-Final: 2017/04/12
+Final: 2017/04/17
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
 #ifndef BT_ATC_HPP
