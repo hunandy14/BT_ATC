@@ -14,27 +14,26 @@ Final: 2017/04/12
 // 說明文檔
 void Help();
 
-class BT_ATC;
-
 // 只執行一次
+class BT_ATC;
 class Once{
 public:
-    // using fun_p = void(BT_ATC::*)();
     using fun_p = void(*)();
 public:
     Once();
     Once(fun_p callback);
     void go(fun_p callback);
     void go_set();
-
-    Once(char const *str);
-    void go_cmd(BT_ATC & rhs);
-public:
+private:
     fun_p fp;
     bool st;
+public: // 特化 BT_ATC 物件
+    Once(char const *str);
+    void go_cmd(BT_ATC & rhs);
     BT_ATC & bt;
     char* cmdstr;
 };
+
 
 
 // 藍芽腳位結構
@@ -43,6 +42,8 @@ struct BT_pin{
     int rx, tx;
     int vcc, key;
 };
+
+
 
 // 藍芽參數設定
 struct BT_info{
@@ -71,23 +72,14 @@ public:
     void SeriScan();    // 掃描 Seri 字串並發送
     bool BlueOK();      // 掃描藍芽 OK 確認命令有效
     void Cmd_Uart();
-public:
-    void Info_Set();  // 批次傳送所有命令
-    void AT_ok();
 public: // 資料成員
-    BT_pin pin;
-    SoftwareSerial BT_Uart;
-    char cmd[16];
-    char bt_msg[32];
-    String str;
-    // Timer t;
+    BT_pin pin;               // 藍芽腳位
+    SoftwareSerial BT_Uart;   // Uart 函式庫物件
+    char cmd[16];             // Seri 命令暫存
+    char bt_msg[32];          // blue 命令暫存
+    String str;               // 判斷命令用的暫存
 };
 
+
+
 #endif
-
-
-
-
-
-
-

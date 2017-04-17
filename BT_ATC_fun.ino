@@ -48,8 +48,7 @@ void Once::go_set(){
         fp();
     }
 }
-//----------------------------------------------------------------
-// Once::Once(BT_ATC & rhs): bt(rhs){}
+// 特化 BT_ATC 物件
 Once::Once(char const *str): cmdstr(str){}
 void Once::go_cmd(BT_ATC & rhs){
     if(st==false) {
@@ -58,11 +57,15 @@ void Once::go_cmd(BT_ATC & rhs){
         rhs.BT_Uart.print("\r\n");
     }
 }
+
+
 //----------------------------------------------------------------
 // 藍芽腳位初始化建構子
 BT_pin::BT_pin(int rx, int tx, int vcc, int key):
     rx(rx), tx(tx), vcc(vcc), key(key)
 {}
+
+
 //----------------------------------------------------------------
 // 藍芽指令初始化建構子
 BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
@@ -111,7 +114,6 @@ void BT_ATC::Static(){
     Serial.print("Vcc static = ");
     Serial.println(digitalRead(pin.vcc));
 }
-//----------------------------------------------------------------
 // 傳輸
 void BT_ATC::SeriRead(){
     if (Serial.available()) {
@@ -129,7 +131,6 @@ void BT_ATC::Uart(){
     SeriRead();
     BlueRead();
 }
-//----------------------------------------------------------------
 // 執行命令
 void BT_ATC::Commander(){
     Serial.print("Cmd: ");
@@ -206,11 +207,11 @@ bool BT_ATC::BlueOK(){
         if(strncmp((bt_msg+pos),"OK", 2)){
             Serial.print(bt_msg);
         } else { // 偵測到結尾 OK
-            Serial.println("");
-            Serial.print("Get OK from BT.\r\n");
-            Serial.println("==================");
+            // Serial.println("");
+            // Serial.print("Get OK from BT.\r\n");
+            // Serial.println("==================");
             Serial.print(bt_msg);
-            Serial.println("==================");
+            // Serial.println("==================");
             return 1;
         }
     }
@@ -219,12 +220,5 @@ bool BT_ATC::BlueOK(){
 void BT_ATC::Cmd_Uart(){
     SeriScan();
     BlueOK();
-}
-//----------------------------------------------------------------
-void BT_ATC::Info_Set(){
-
-}
-void BT_ATC::AT_ok(){
-
 }
 //----------------------------------------------------------------

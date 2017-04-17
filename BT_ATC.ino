@@ -1,11 +1,11 @@
 /*****************************************************************
 Name : Blue_ATCommand
-Date : 2015/04/23
+Date1: 2015/04/23
+Date2: 2017/04/15
 By   : CharlotteHonG
-Final: 2017/04/15
+Final: 2017/04/17
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
-
 #include "BT_ATC.hpp"
 
 #define BT_RX 2
@@ -14,15 +14,26 @@ Final: 2017/04/15
 #define BT_Key 5
 #define Rate 38400
 
+// 藍芽腳位設置
 BT_pin hc05_pin(BT_RX, BT_TX, BT_Vcc, BT_Key);
+// AT命令者設置
 BT_ATC hc05(hc05_pin);
 auto& BT = hc05.BT_Uart; // use BT.print()
+// 命令設定
+Once Slave[]{
+    "AT+NAME=CHG",
+    "AT+UART=38400,0,0",
+    "AT+PSWD=0000",
+    "AT+ROLE=0",
+    "AT+RMAAD",
+    "AT+ADCN?",
+    "AT+ADDR?",
 
-void fun(){
-    Serial.println("Test");
-}
-Timer t1;
-
+    "AT+NAME",
+    "AT+UART",
+    "AT+PSWD",
+    "AT+ROLE"
+};
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -32,59 +43,14 @@ void setup() {
     hc05.Static();
     hc05.begin(Rate);
     hc05.AT_Mode();
-    // 自動設定參數
-    // setting();
-    // t1.after(1000, checkinfo);
 }
 //----------------------------------------------------------------
-Once Slave_setting[]{
-    "AT+NAME=CHG",
-    "AT+NAME",
-    "AT+UART=38400,0,0",
-    "AT+ROLE=0",
-    "AT+RMAAD",
-    "AT+ADCN?",
-    "AT+ADDR?"
- };
-
-int i=0;
+int cmd_num=0;
 void loop() {
-    t1.update();
+    // 偵測 Seri 命令並發送
     hc05.SeriScan();
-
-    Slave_setting[i].go_cmd(hc05);
-    i += hc05.BlueOK();
+    // 自動設定參數
+    Slave[cmd_num].go_cmd(hc05);
+    cmd_num += hc05.BlueOK();
 }
 //----------------------------------------------------------------
-void setting(){
-    int delaytime=50;
-    BT.print("AT+NAME=CHG\r\n");
-    delay(delaytime);
-    BT.print("AT+UART=38400,0,0\r\n");
-    delay(delaytime);
-    BT.print("AT+PSWD=0000\r\n");
-    delay(delaytime);
-    BT.print("AT+ROLE=0\r\n");
-    delay(delaytime);
-    BT.print("AT+RMAAD\r\n");
-    delay(delaytime);
-    BT.print("AT+ADCN?\r\n");
-    delay(delaytime);
-    BT.print("AT+ADDR?\r\n");
-    delay(delaytime);
-}
-void checkinfo(){
-    int delaytime=50;
-    BT.print("AT+NAME\r\n");
-    delay(delaytime);
-    BT.print("AT+UART\r\n");
-    delay(delaytime);
-    BT.print("AT+PSWD\r\n");
-    delay(delaytime);
-    BT.print("AT+ROLE\r\n");
-    delay(delaytime);
-    // 初始化
-    hc05.key(0);
-    BT.print("AT+INIT\r\n");
-    delay(delaytime);
-}
