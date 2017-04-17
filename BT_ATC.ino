@@ -31,7 +31,9 @@ Once Slave[]{
     "AT+NAME",
     "AT+UART",
     "AT+PSWD",
-    "AT+ROLE"
+    "AT+ROLE",
+    // 初始化
+    "AT+INIT"
 };
 #define Slavelen sizeof(Slave)/sizeof(Slave[0])
 //----------------------------------------------------------------
@@ -42,17 +44,12 @@ void setup() {
     Help();
     hc05.Static();
     hc05.begin(Rate);
-    hc05.AT_Mode();
+    hc05.AT_Mode(0);
 }
 //----------------------------------------------------------------
 int cmd_num=0;
 void loop() {
-    
-    if(cmd_num < Slavelen){
-        Slave[cmd_num].go_cmd(hc05);
-        cmd_num += hc05.BlueOK();
-    }
-
-    // hc05.Cmder(Slave, 11); // 有問題跑不完
+    // hc05.Cmd_Uart();
+    hc05.Cmder(Slave, Slavelen);
 }
 //----------------------------------------------------------------

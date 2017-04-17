@@ -29,6 +29,7 @@ private:
 public: // 特化 BT_ATC 物件
     Once(char const *str);
     void go_cmd(BT_ATC & rhs);
+    void go_atm(BT_ATC & rhs);
     BT_ATC & bt;
     char* cmdstr;
 };
@@ -46,7 +47,8 @@ public:// 建構子
 public:
     void pow(bool sta); // 電源控制
     void key(bool sta); // 電源控制
-    void AT_Mode();     // 進入AT模式
+    void AT_Mode();     // 進入AT模式(是否保持 KEY)
+    void AT_Mode(bool sta);
     void Reboot();      // 重新啟動
     void Static();      // 查詢狀態
 public:
@@ -67,8 +69,7 @@ public: // 資料成員
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
     size_t cmd_num=0;         // 執行到第幾個命令
-    bool SeriPri=1;
-    bool BluePri=1;
+    Once atm;
 };
 
 
