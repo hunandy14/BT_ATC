@@ -57,10 +57,10 @@ void Once::go_cmd(BT_ATC & rhs){
         rhs.BT_Uart.print("\r\n");
     }
 }
-void Once::go_atm(BT_ATC & rhs){
+void Once::go_atm(BT_ATC & rhs, bool sta){
     if(st==false) {
         st=true;
-        rhs.AT_Mode();
+        rhs.AT_Mode(sta);
     }
 }
 
@@ -99,8 +99,7 @@ void BT_ATC::AT_Mode(bool sta){
     pow(0);
     key(1);
     delay(3);
-    if(sta==1)
-        pow(1);
+    pow(1);
     // 等待OK
     Serial.println("Wait AT_Mode...");
     delay(1000);
@@ -110,6 +109,9 @@ void BT_ATC::AT_Mode(bool sta){
     //     BT_Uart.print("AT\r\n");
     // }Serial.println("");
     Serial.println("Now AT_Mode is ready.");
+    if(sta==0) {
+        key(0);
+    }
 }
 // 重新啟動
 void BT_ATC::Reboot(){
@@ -246,7 +248,7 @@ void BT_ATC::Cmd_Uart(){
 size_t BT_ATC::Cmder(Once* hs, size_t len){
     SeriScan();
     // 進入AT模式
-    atm.go_atm((*this));
+    atm.go_atm((*this), 1);
     // 命令還沒執行完
     if(cmd_num < len) {
         delay(30);
@@ -254,6 +256,7 @@ size_t BT_ATC::Cmder(Once* hs, size_t len){
         cmd_num += BlueOK();
         if(cmd_num == len){
             Serial.println("# CMD All ok");
+            key(0);
             return cmd_num;
         }
     } else { // 命令執行完畢

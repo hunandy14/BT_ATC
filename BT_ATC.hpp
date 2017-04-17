@@ -17,6 +17,7 @@ void Help();
 class BT_ATC;
 class Once{
 public:
+    friend class BT_ATC;
     using fun_p = void(*)();
 public:
     Once();
@@ -28,8 +29,9 @@ private:
     bool st;
 public: // 特化 BT_ATC 物件
     Once(char const *str);
+private:
     void go_cmd(BT_ATC & rhs);
-    void go_atm(BT_ATC & rhs);
+    void go_atm(BT_ATC & rhs, bool sta);
     BT_ATC & bt;
     char* cmdstr;
 };
@@ -69,7 +71,7 @@ public: // 資料成員
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
     size_t cmd_num=0;         // 執行到第幾個命令
-    Once atm;
+    Once atm;                 // 委託執行一次ATM
 };
 
 
