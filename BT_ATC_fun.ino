@@ -93,7 +93,16 @@ void BT_ATC::AT_Mode(){
     pow(1);
     //等待開啟
     Serial.println("Wait AT_Mode...");
-    delay(1000);
+    while(BlueOK() == 0){
+        BT_Uart.print("AT\r\n");
+        Serial.print("**\n");
+        // BlueOK();
+        // if (BlueOK() == 1){
+        //     break;
+        // }
+    }
+
+    // delay(1000);
     Serial.println("Now AT_Mode is ready.");
 }
 // 重新啟動
@@ -132,7 +141,7 @@ void BT_ATC::Uart(){
     BlueRead();
 }
 // 執行命令
-void BT_ATC::Commander(){
+void BT_ATC::Cmds(){
     Serial.print("Cmd: ");
     String str = cmd;
     // 重新啟動模式
@@ -167,6 +176,9 @@ void BT_ATC::Commander(){
     }
     else if(str == "/HELP\r\n"){
         Help();
+    // 指令錯誤
+    } else {
+        Serial.println("ATCmd Error.");
     }
 }
 // 掃描 Seri 字串並發送
@@ -184,7 +196,7 @@ void BT_ATC::SeriScan(){
         if(strncmp(cmd,"/",1)){
             BT_Uart.print(cmd);
         } else { // 偵測到斜線才執行命令
-            Commander();
+            Cmds();
         }
     }
 }
@@ -220,5 +232,20 @@ bool BT_ATC::BlueOK(){
 void BT_ATC::Cmd_Uart(){
     SeriScan();
     BlueOK();
+}
+size_t BT_ATC::Cmder(Once* hs, size_t len){
+    SeriScan();
+    // 命令還沒執行完
+    if(cmd_num < len) {
+        hs[cmd_num].go_cmd((*this));
+        cmd_num += BlueOK();
+        if(cmd_num == len){
+            Serial.println("#CMD All ok");
+            return cmd_num;
+        }
+    } else { // 命令執行完畢
+        BlueOK();
+    }
+    return cmd_num;
 }
 //----------------------------------------------------------------

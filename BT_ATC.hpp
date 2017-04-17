@@ -54,16 +54,19 @@ public:
     void BlueRead();    // 讀取並發送 bule --> bule
     void Uart();        // 兩者互通
 public:
-    void Commander();   // 執行命令
+    void Cmds();        // 命令集
     void SeriScan();    // 掃描 Seri 字串並發送
     bool BlueOK();      // 掃描藍芽 OK 確認命令有效
+    bool BlueOK(bool NoPri);
     void Cmd_Uart();
+    size_t Cmder(Once* hs, size_t len);
 public: // 資料成員
     BT_pin pin;               // 藍芽腳位
     SoftwareSerial BT_Uart;   // Uart 函式庫物件
     char cmd[16];             // Seri 命令暫存
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
+    size_t cmd_num=0;         // 執行到第幾個命令
 };
 
 

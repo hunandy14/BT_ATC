@@ -27,12 +27,13 @@ Once Slave[]{
     "AT+RMAAD",
     "AT+ADCN?",
     "AT+ADDR?",
-
+    // 確認資訊
     "AT+NAME",
     "AT+UART",
     "AT+PSWD",
     "AT+ROLE"
 };
+#define Slavelen sizeof(Slave)/sizeof(Slave[0])
 //----------------------------------------------------------------
 void setup() {
     Serial.begin(9600);
@@ -46,11 +47,6 @@ void setup() {
 //----------------------------------------------------------------
 int cmd_num=0;
 void loop() {
-    // 偵測 Seri 命令並發送
-    hc05.SeriScan();
-    // 自動設定參數
-    Slave[cmd_num].go_cmd(hc05);
-    // 等待回傳 ok 才繼續執行下一個
-    cmd_num += hc05.BlueOK();
+    hc05.Cmder(Slave, Slavelen);
 }
 //----------------------------------------------------------------
