@@ -236,9 +236,11 @@ size_t BT_ATC::Cmder(Once* hs, size_t len){
     SeriScan();
     // 命令還沒執行完
     if(cmd_num < len) {
-        delay(3);
+        delay(30);
         hs[cmd_num].go_cmd((*this));
         cmd_num += BlueOK();
+        Serial.print(cmd_num);
+        Serial.print(" = ");
         if(cmd_num == len){
             Serial.println("#CMD All ok");
             return cmd_num;
