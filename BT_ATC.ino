@@ -1,5 +1,5 @@
 /*****************************************************************
-Name : Blue_ATCommand Version 2.1.1
+Name : Blue_ATCommand Version 2.1.2
 Date1: 2015/04/23
 Date2: 2017/04/14
 By   : CharlotteHonG
