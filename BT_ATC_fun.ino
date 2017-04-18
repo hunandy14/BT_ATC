@@ -258,9 +258,12 @@ void Once::go_atm(BT_ATC & rhs, bool sta){
 }
 // 無人職守響應執行命令
 size_t BT_ATC::Cmder(Once* hs, size_t len){
-    this->Cmder(hs, len, 0);
+    this->Cmder(hs, len, 1, 0);
 }
-size_t BT_ATC::Cmder(Once* hs, size_t len, bool Pri){
+size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta){
+    this->Cmder(hs, len, key_sta, 0);
+}
+size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta, bool Pri){
     // 命令還沒執行完
     while(cmd_num < len){
         // 進入AT模式
@@ -283,7 +286,8 @@ size_t BT_ATC::Cmder(Once* hs, size_t len, bool Pri){
         // 執行完畢
         if(cmd_num == len){
             Serial.println("# CMD All ok");
-            this->key(0);
+            if(key_sta==0)
+                this->key(0);
             return cmd_num;
         }
     }
@@ -291,6 +295,9 @@ size_t BT_ATC::Cmder(Once* hs, size_t len, bool Pri){
 }
 // 獲取地址
 bool BT_ATC::get_addr(){
+    this->get_addr(1);
+}
+bool BT_ATC::get_addr(bool key_sta){
     // 還沒讀到地址
     while(!strlen(address)) {
         // 進入AT模式
@@ -307,5 +314,13 @@ bool BT_ATC::get_addr(){
         }
     }
     return 0;
+}
+// 設定地址
+bool BT_ATC::set_addr(){
+    this->set_addr(1);
+}
+bool BT_ATC::set_addr(bool key_sta){
+    // 進入AT模式
+    once_atm.go_atm((*this), 1);
 }
 //----------------------------------------------------------------

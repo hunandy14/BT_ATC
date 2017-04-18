@@ -68,9 +68,13 @@ public:
 public:
     void AT_Mode(bool sta);
     bool get_addr();
+    bool get_addr(bool key_sta);
+    bool set_addr();
+    bool set_addr(bool key_sta);
     // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
-    size_t Cmder(Once* hs, size_t len, bool Pri);
+    size_t Cmder(Once* hs, size_t len, bool key_sta);
+    size_t Cmder(Once* hs, size_t len, bool key_sta, bool Pri);
 // 資料成員
 public: 
     BT_pin pin;               // 藍芽腳位
@@ -83,7 +87,7 @@ private:
     Once once_atm;            // 委託執行一次ATM
     Once once_add{"AT+ADDR?"};// 委託執行一次查找地址
     char address[16];         // 藍芽地址
-    Once once_addin;
+    Once once_addset;
 };
 
 

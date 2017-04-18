@@ -47,8 +47,10 @@ void setup(){
 int cmd_num=0;
 void loop(){
     // 自動輸入
-    hc05.Cmder(Slave, Slavelen);
+    hc05.Cmder(Slave, Slavelen, 1, 0);
     // 獲取地址
-    hc05.get_addr();
+    hc05.get_addr(1);
+    // 設定地址
+    hc05.set_addr(1);
 }
 //----------------------------------------------------------------
