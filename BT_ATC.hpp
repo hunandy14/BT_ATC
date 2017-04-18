@@ -65,9 +65,10 @@ public:
     void SeriScan();    // 掃描 Seri 字串並發送
     bool BlueOK();      // 掃描藍芽 OK 確認命令有效
     bool BlueOK(bool NoPri);
-    void Cmd_Uart();
+    void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
     void AT_Mode(bool sta);
+    // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
 // 資料成員
 public: 

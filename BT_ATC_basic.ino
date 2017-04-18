@@ -67,21 +67,6 @@ void Once::go_set(){
         fp();
     }
 }
-// 特化 BT_ATC 物件
-Once::Once(char const *str): cmdstr(str){}
-void Once::go_cmd(BT_ATC & rhs){
-    if(st==false) {
-        st=true;
-        rhs.BT_Uart.print(cmdstr);
-        rhs.BT_Uart.print("\r\n");
-    }
-}
-void Once::go_atm(BT_ATC & rhs, bool sta){
-    if(st==false) {
-        st=true;
-        rhs.AT_Mode(sta);
-    }
-}
 /*
 	 ######   ######                       ##
 	 ##   ##    ##
