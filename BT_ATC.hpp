@@ -68,6 +68,7 @@ public:
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
     void AT_Mode(bool sta);
+    char* get_addr();
     // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
 // 資料成員

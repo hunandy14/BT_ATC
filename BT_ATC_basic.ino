@@ -16,7 +16,7 @@ Final: 2017/04/18
 
 */
 // 說明文檔
-void Help() {
+void Help(){
 	/*
 	Command:
 	  /ATM    AT Command Mode
@@ -50,19 +50,19 @@ void Help() {
 	   ###    ##   ##   #####    #####
 
 */
-Once::Once(): fp(nullptr), st(false) {}
-Once::Once(fun_p callback): fp(callback), st(false) {}
+Once::Once(): fp(nullptr), st(false){}
+Once::Once(fun_p callback): fp(callback), st(false){}
 // 只執行一次事後設定的
-void Once::go(fun_p callback) {
-	if(st==false) {
+void Once::go(fun_p callback){
+	if(st==false){
 		st=true;
 		fp=callback;
 		fp();
 	}
 }
 // 只執行一次建構設定的
-void Once::go_set() {
-	if(st==false) {
+void Once::go_set(){
+	if(st==false){
 		st=true;
 		fp();
 	}
