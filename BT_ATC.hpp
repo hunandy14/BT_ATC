@@ -47,7 +47,6 @@ private:
         int vcc, key;
     };
 public:// 建構子
-    BT_ATC(BT_pin pin);
     BT_ATC(int rx, int tx, int vcc, int key);
     void begin(size_t rate);
 public:
@@ -64,13 +63,14 @@ public:
     void Cmds();        // 命令集
     void SeriScan();    // 掃描 Seri 字串並發送
     bool BlueOK();      // 掃描藍芽 OK 確認命令有效
-    bool BlueOK(bool NoPri);
+    bool BlueOK(bool Pri);
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
     void AT_Mode(bool sta);
-    char* get_addr();
+    bool get_addr();
     // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
+    size_t Cmder(Once* hs, size_t len, bool Pri);
 // 資料成員
 public: 
     BT_pin pin;               // 藍芽腳位
@@ -80,7 +80,10 @@ private:
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
     int cmd_num;              // 執行到第幾個命令
-    Once atm;                 // 委託執行一次ATM
+    Once once_atm;            // 委託執行一次ATM
+    Once once_add{"AT+ADDR?"};// 委託執行一次查找地址
+    char address[16];         // 藍芽地址
+    Once once_addin;
 };
 
 

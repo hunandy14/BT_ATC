@@ -18,15 +18,8 @@ Final: 2017/04/17
 */
 // 藍芽指令初始化建構子
 BT_ATC::BT_ATC(int rx, int tx, int vcc, int key):
-    pin(rx, tx, vcc, key)
-    ,BT_Uart(tx, rx), cmd_num(0)
-{
-    pinMode(BT_Key, OUTPUT);
-    pinMode(BT_Vcc, OUTPUT);
-    this->pow(1);
-}
-BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
-    ,BT_Uart(pin.tx, pin.rx), cmd_num(0)
+    pin(rx, tx, vcc, key),
+    BT_Uart(pin.tx, pin.rx), cmd_num(0)
 {
     pinMode(BT_Key, OUTPUT);
     pinMode(BT_Vcc, OUTPUT);
@@ -180,7 +173,7 @@ void BT_ATC::SeriScan(){
 bool BT_ATC::BlueOK(){
     return this->BlueOK(true);
 }
-bool BT_ATC::BlueOK(bool NoPri){
+bool BT_ATC::BlueOK(bool Pri){
     // 如果有字近來
     if(BT_Uart.available()){
         size_t i=0;
@@ -194,13 +187,13 @@ bool BT_ATC::BlueOK(bool NoPri){
         pos = pos<0? 0: pos; // 修正小於 0 可能
         // 沒有偵測到 OK 直接轉送藍芽信息
         if(strncmp((bt_msg+pos),"OK", 2)){
-            if(NoPri){ // 是否打印回傳信息
+            if(Pri==1){ // 是否打印回傳信息
                 Serial.print(bt_msg);
             }
         }
         // 偵測到結尾 OK
         else {
-            if(NoPri){ // 是否打印回傳信息
+            if(Pri==1){ // 是否打印回傳信息
                 // Serial.print("Get OK from BT.\r\n");
                 Serial.print(bt_msg);
             }
@@ -265,26 +258,54 @@ void Once::go_atm(BT_ATC & rhs, bool sta){
 }
 // 無人職守響應執行命令
 size_t BT_ATC::Cmder(Once* hs, size_t len){
-    this->SeriScan();
-    // 進入AT模式
-    atm.go_atm((*this), 1);
+    this->Cmder(hs, len, 0);
+}
+size_t BT_ATC::Cmder(Once* hs, size_t len, bool Pri){
     // 命令還沒執行完
-    if(cmd_num < len){
+    while(cmd_num < len){
+        // 進入AT模式
+        once_atm.go_atm((*this), 1);
         delay(30);
+        // 執行命令
         hs[cmd_num].go_cmd((*this));
-        cmd_num += this->BlueOK();
+        // 等待回傳OK執行下一個
+        int number = this->BlueOK();
+        cmd_num += number;
+        // 打印進度
+        if(number == 1 && Pri==1) {
+            number = 0;
+            Serial.print("# Cmder...[");
+            Serial.print(cmd_num);
+            Serial.print("/");
+            Serial.print(len);
+            Serial.print("]\n");
+        }
+        // 執行完畢
         if(cmd_num == len){
             Serial.println("# CMD All ok");
             this->key(0);
             return cmd_num;
         }
-    } else { // 命令執行完畢
-        this->BlueOK();
     }
     return cmd_num;
 }
-char* BT_ATC::get_addr(){
-
-    return '0';
+// 獲取地址
+bool BT_ATC::get_addr(){
+    // 還沒讀到地址
+    while(!strlen(address)) {
+        // 進入AT模式
+        once_atm.go_atm((*this), 1);
+        // 查找地址
+        once_add.go_cmd((*this));
+        if(this->BlueOK(0)==1){
+            strncpy(address, (bt_msg+6), 14);
+            Serial.print("BT_ATC::address[");
+            Serial.print(strlen(address));
+            Serial.print("] = ");
+            Serial.print(address);
+            return 1;
+        }
+    }
+    return 0;
 }
 //----------------------------------------------------------------
