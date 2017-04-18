@@ -17,7 +17,7 @@ Final: 2017/04/17
 BT_ATC hc05(BT_RX, BT_TX, BT_Vcc, BT_Key);
 auto& BT = hc05.BT_Uart; // use BT.print()
 // 命令設定
-Once Slave[]{
+Once Slave[] {
     "AT+NAME=CHG",
     "AT+UART=38400,0,0",
     "AT+PSWD=0000",
