@@ -101,7 +101,7 @@ void BT_ATC::Uart(){
 */
 // 命令集
 void BT_ATC::Cmds(){
-    Serial.print("Cmd: ");
+    Serial.print("# Cmd: ");
     String str = cmd;
     // 重新啟動模式
     if(str == "/ATM\r\n"){
@@ -225,16 +225,12 @@ void BT_ATC::AT_Mode(bool sta){
     // 等待OK
     Serial.println("Wait AT_Mode...");
     delay(1000);
-
-
-    // 換成這樣莫名其妙的，底下命令 Cmder() 執行就出事
-    // while(!BlueOK(false)){
-    //     Serial.print(".");
-    //     delay(50);
-    //     BT_Uart.print("AT\r\n");
-    // }Serial.println("");
-
-
+    // 確認真好了
+    while(!BlueOK(false)){
+        Serial.print(".");
+        delay(500);
+        BT_Uart.print("AT\r\n");
+    }Serial.println("");
     Serial.println("Now AT_Mode is ready.");
     // 是否關閉KEY腳位
     if(sta==0){
@@ -246,7 +242,24 @@ Once::Once(char const *str): cmdstr(str){}
 void Once::go_cmd(BT_ATC & rhs){
     if(st==false){
         st=true;
+        delay(30);
+        rhs.BT_Uart.print("AT+");
         rhs.BT_Uart.print(cmdstr);
+        rhs.BT_Uart.print("\r\n");
+    }
+}
+void Once::go_thiscmd(BT_ATC & rhs, char* thiscmd){
+    this->go_thiscmd(rhs, thiscmd, "");
+}
+void Once::go_thiscmd(BT_ATC & rhs, char* thiscmd, char* thiscmd2){
+    if(st==false){
+        st=true;
+        delay(30);
+        rhs.BT_Uart.print("AT+");
+        rhs.BT_Uart.print(thiscmd);
+        if(strlen(thiscmd2) != 0) {
+            rhs.BT_Uart.print(thiscmd2);
+        }
         rhs.BT_Uart.print("\r\n");
     }
 }
@@ -305,22 +318,37 @@ bool BT_ATC::get_addr(bool key_sta){
         // 查找地址
         once_add.go_cmd((*this));
         if(this->BlueOK(0)==1){
+            // 地址總長為14
             strncpy(address, (bt_msg+6), 14);
-            Serial.print("BT_ATC::address[");
+            // 改為逗號
+            address[4]=',';
+            address[7]=',';
+            Serial.print("addr[");
             Serial.print(strlen(address));
-            Serial.print("] = ");
-            Serial.print(address);
+            Serial.print("]=");
+            Serial.println(address);
             return 1;
         }
     }
     return 0;
 }
 // 設定地址
-bool BT_ATC::set_addr(){
-    this->set_addr(1);
+bool BT_ATC::set_addr(char* addr){
+    return this->set_addr(addr, 1);
 }
-bool BT_ATC::set_addr(bool key_sta){
-    // 進入AT模式
-    once_atm.go_atm((*this), 1);
+bool BT_ATC::set_addr(char* addr, bool key_sta){
+    // 設定地址
+    if(once_addset.st==1)
+        return 0;
+    while(1) {
+        // 進入AT模式
+        once_atm.go_atm((*this), 1);
+        // 執行命令
+        once_addset.go_thiscmd((*this), "BIND=", addr);
+        // 等待回應 ok 才離開
+        if(this->BlueOK()==1)
+            return 1;
+    }
+    return 0;
 }
 //----------------------------------------------------------------

@@ -24,14 +24,17 @@ public:
     Once(fun_p callback);
     void go(fun_p callback);
     void go_set();
+public:
+    bool st;
 private:
     fun_p fp;
-    bool st;
 // 特化 BT_ATC 物件
 public:
     Once(char const *str);
 private:
     void go_cmd(BT_ATC & rhs);
+    void go_thiscmd(BT_ATC & rhs, char* thiscmd);
+    void go_thiscmd(BT_ATC & rhs, char* thiscmd, char* thiscmd2);
     void go_atm(BT_ATC & rhs, bool sta);
     BT_ATC & bt;
     char* cmdstr;
@@ -67,26 +70,28 @@ public:
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
     void AT_Mode(bool sta);
+    // 取得地址
     bool get_addr();
     bool get_addr(bool key_sta);
-    bool set_addr();
-    bool set_addr(bool key_sta);
     // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
     size_t Cmder(Once* hs, size_t len, bool key_sta);
     size_t Cmder(Once* hs, size_t len, bool key_sta, bool Pri);
+    // 地定地址
+    bool set_addr(char* addr);
+    bool set_addr(char* addr, bool key_sta);
 // 資料成員
 public: 
     BT_pin pin;               // 藍芽腳位
     SoftwareSerial BT_Uart;   // Uart 函式庫物件
+    char address[16];         // 藍芽地址
 private:
     char cmd[16];             // Seri 命令暫存
     char bt_msg[32];          // blue 命令暫存
     String str;               // 判斷命令用的暫存
     int cmd_num;              // 執行到第幾個命令
     Once once_atm;            // 委託執行一次ATM
-    Once once_add{"AT+ADDR?"};// 委託執行一次查找地址
-    char address[16];         // 藍芽地址
+    Once once_add{"ADDR?"};   // 委託執行一次查找地址
     Once once_addset;
 };
 

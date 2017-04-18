@@ -29,16 +29,15 @@ void Help(){
 	  /HELP   Return Help
 	            By:Charlotte.HonG
 	*/
-	Serial.println("Command:");
-	Serial.println("  /ATM    AT Command Mode");
-	Serial.println("  /RE     Reboot to AutoLinkMode");
-	Serial.println("  /VH     Vcc ON");
-	Serial.println("  /VL     Vcc OFF");
-	Serial.println("  /KH     Key Power ON");
-	Serial.println("  /KL     Key Power OFF");
-	Serial.println("  /STA    Return Key and Vcc now static");
-	Serial.println("  /HELP   Return Help");
-	Serial.println("            By:Charlotte.HonG");
+	Serial.println("Command:By: Charlotte.HonG");
+	Serial.println(" /ATM  AT Command Mode");
+	Serial.println(" /RE   Reboot to AutoLinkMode");
+	Serial.println(" /VH   Vcc ON");
+	Serial.println(" /VL   Vcc OFF");
+	Serial.println(" /KH   Key Power ON");
+	Serial.println(" /KL   Key Power OFF");
+	Serial.println(" /STA  Return Key and Vcc now static");
+	Serial.println(" /HELP Return Help");
 }
 /*
 	   ###

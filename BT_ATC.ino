@@ -17,40 +17,43 @@ Final: 2017/04/17
 BT_ATC hc05(BT_RX, BT_TX, BT_Vcc, BT_Key);
 auto& BT = hc05.BT_Uart; // use BT.print()
 // 命令設定
-Once Slave[]{
-    "AT+NAME=CHG",
-    "AT+UART=38400,0,0",
-    "AT+PSWD=0000",
-    "AT+ROLE=0",
-    "AT+RMAAD",
-    "AT+ADCN?",
-    "AT+ADDR?",
-    // 確認資訊
-    "AT+NAME",
-    "AT+UART",
-    "AT+PSWD",
-    "AT+ROLE",
+Once Master[]{
+    "NAME=CHG",
+    "UART=38400,0,0",
+    "PSWD=0000",
+    "ROLE=1",
+    "CMODE=0",
     // 初始化
-    "AT+INIT"
+    "INIT"
+};
+Once Slave[]{
+    "NAME=CHG",
+    "UART=38400,0,0",
+    "PSWD=0000",
+    "ROLE=0",
+    "CMODE=1",
+    // 初始化
+    "INIT"
 };
 #define Slavelen sizeof(Slave)/sizeof(Slave[0])
 //----------------------------------------------------------------
 void setup(){
     Serial.begin(9600);
     Serial.println("");
-    Serial.println("Welcome Blueteeth_ATCommand");
+    Serial.println("Welcome BT_ATC");
     Help();
     hc05.Static();
     hc05.begin(Rate);
+    // 自動輸入
+    hc05.Cmder(Slave, Slavelen, 1, 1);
+    // 獲取地址
+    hc05.get_addr();
+    // 設定地址
+    hc05.set_addr(hc05.address);
 }
 //----------------------------------------------------------------
-int cmd_num=0;
 void loop(){
-    // 自動輸入
-    hc05.Cmder(Slave, Slavelen, 1, 0);
-    // 獲取地址
-    hc05.get_addr(1);
-    // 設定地址
-    hc05.set_addr(1);
+    // 開啟通訊
+    hc05.Cmd_Uart();
 }
 //----------------------------------------------------------------
