@@ -53,10 +53,10 @@ void BT_ATC::key(bool sta){
 }
 // 重新啟動
 void BT_ATC::Reboot(){
-    pow(0);
-    key(0);
+    this->pow(0);
+    this->key(0);
     delay(3);
-    pow(1);
+    this->pow(1);
     //等待開啟
     Serial.println("Wait Reboot...");
     delay(1000);
@@ -64,29 +64,48 @@ void BT_ATC::Reboot(){
 }
 // 進入AT模式
 void BT_ATC::AT_Mode(){
-    AT_Mode(true);
+    this->AT_Mode(true);
 }
 //----------------------------------------------------------------
+/*
+    #     #
+    #     #   ##   #####  #####
+    #     #  #  #  #    #   #
+    #     # #    # #    #   #
+    #     # ###### #####    #
+    #     # #    # #   #    #
+     #####  #    # #    #   #
+*/
+
 // 讀取並發送 Seri --> bule
 void BT_ATC::SeriRead(){
     if (Serial.available()) {
         delay(3);
-        BT_Uart.print(static_cast<char>(Serial.read()));
+        this->BT_Uart.print(static_cast<char>(Serial.read()));
     }
 }
 // 讀取並發送 bule --> Seri
 void BT_ATC::BlueRead(){
     if (BT_Uart.available()) {
         delay(3);
-        Serial.print(static_cast<char>(BT_Uart.read()));
+        Serial.print(static_cast<char>(this->BT_Uart.read()));
     }
 }
 // 兩者互通
 void BT_ATC::Uart(){
-    SeriRead();
-    BlueRead();
+    this->SeriRead();
+    this->BlueRead();
 }
 //----------------------------------------------------------------
+/*
+     #####
+    #     # #    # #####   ####
+    #       ##  ## #    # #
+    #       # ## # #    #  ####
+    #       #    # #    #      #
+    #     # #    # #    # #    #
+     #####  #    # #####   ####
+*/
 // 命令集
 void BT_ATC::Cmds(){
     Serial.print("Cmd: ");
@@ -94,32 +113,32 @@ void BT_ATC::Cmds(){
     // 重新啟動模式
     if(str == "/ATM\r\n"){
         Serial.println("AT_Mode");
-        AT_Mode();
+        this->AT_Mode();
     }
     else if(str == "/RE\r\n"){
         Serial.println("Reboot");
-        Reboot();
+        this->Reboot();
     }
     // 電源控制
     else if(str == "/VH\r\n"){
         Serial.println("Vcc Power ON");
-        pow(1);
+        this->pow(1);
     }
     else if(str == "/VL\r\n"){
         Serial.println("Vcc Power OFF");
-        pow(0);
+        this->pow(0);
     }
     else if(str == "/KH\r\n"){
         Serial.println("Key Power ON");
-        key(1);
+        this->key(1);
     }
     else if(str == "/KL\r\n"){
         Serial.println("Key Power OFF");
-        key(0);
+        this->key(0);
     }
     // 查詢狀態
     else if(str == "/STA\r\n"){
-        Static();
+        this->Static();
     }
     else if(str == "/HELP\r\n"){
         Help();
@@ -128,6 +147,16 @@ void BT_ATC::Cmds(){
         Serial.println("ATCmd Error.");
     }
 }
+/*
+     #####                        #     #
+    #     # #    # #####          #     #   ##   #####  #####
+    #       ##  ## #    #         #     #  #  #  #    #   #
+    #       # ## # #    #         #     # #    # #    #   #
+    #       #    # #    #         #     # ###### #####    #
+    #     # #    # #    #         #     # #    # #   #    #
+     #####  #    # #####  #######  #####  #    # #    #   #
+*/
+
 // 掃描 Seri 字串並發送
 void BT_ATC::SeriScan(){
     // 如果有字近來
@@ -140,16 +169,16 @@ void BT_ATC::SeriScan(){
         } cmd[i]='\0';
 
         // 沒有偵測到斜線轉送信息給藍芽
-        if(strncmp(cmd,"/",1)){
+        if(strncmp(this->cmd,"/",1)){
             BT_Uart.print(cmd);
         } else { // 偵測到斜線才執行命令
-            Cmds();
+            this->Cmds();
         }
     }
 }
 // 捕捉藍芽 OK 信息
 bool BT_ATC::BlueOK(){
-    return BlueOK(true);
+    return this->BlueOK(true);
 }
 bool BT_ATC::BlueOK(bool NoPri){
     // 如果有字近來
@@ -180,38 +209,30 @@ bool BT_ATC::BlueOK(bool NoPri){
     }
     return 0;
 }
+// 兩者互通並可接受關鍵字命令
 void BT_ATC::Cmd_Uart(){
-    SeriScan();
-    BlueOK();
+    this->SeriScan();
+    this->BlueOK();
 }
-size_t BT_ATC::Cmder(Once* hs, size_t len){
-    SeriScan();
-    // 進入AT模式
-    atm.go_atm((*this), 1);
-    // 命令還沒執行完
-    if(cmd_num < len) {
-        delay(30);
-        hs[cmd_num].go_cmd((*this));
-        cmd_num += (int)BlueOK();
-        if(cmd_num == len){
-            Serial.println("# CMD All ok");
-            key(0);
-            return cmd_num;
-        }
-    } else { // 命令執行完畢
-        BlueOK();
-    }
-    return cmd_num;
-}
+/*
+     #####
+    #     # #    # #####  ###### #####
+    #       ##  ## #    # #      #    #
+    #       # ## # #    # #####  #    #
+    #       #    # #    # #      #####
+    #     # #    # #    # #      #   #
+     #####  #    # #####  ###### #    #
+*/
 // 進入AT模式
 void BT_ATC::AT_Mode(bool sta){
-    pow(0);
-    key(1);
+    this->pow(0);
+    this->key(1);
     delay(3);
-    pow(1);
+    this->pow(1);
     // 等待OK
     Serial.println("Wait AT_Mode...");
     delay(1000);
+
 
     // 換成這樣莫名其妙的，底下命令 Cmder() 執行就出事
     // while(!BlueOK(false)){
@@ -222,8 +243,44 @@ void BT_ATC::AT_Mode(bool sta){
 
 
     Serial.println("Now AT_Mode is ready.");
+    // 是否關閉KEY腳位
     if(sta==0) {
-        key(0);
+        this->key(0);
     }
+}
+// 特化 BT_ATC 物件
+Once::Once(char const *str): cmdstr(str){}
+void Once::go_cmd(BT_ATC & rhs){
+    if(st==false) {
+        st=true;
+        rhs.BT_Uart.print(cmdstr);
+        rhs.BT_Uart.print("\r\n");
+    }
+}
+void Once::go_atm(BT_ATC & rhs, bool sta){
+    if(st==false) {
+        st=true;
+        rhs.AT_Mode(sta);
+    }
+}
+// 無人職守響應執行命令
+size_t BT_ATC::Cmder(Once* hs, size_t len){
+    this->SeriScan();
+    // 進入AT模式
+    atm.go_atm((*this), 1);
+    // 命令還沒執行完
+    if(cmd_num < len) {
+        delay(30);
+        hs[cmd_num].go_cmd((*this));
+        cmd_num += this->BlueOK();
+        if(cmd_num == len){
+            Serial.println("# CMD All ok");
+            this->key(0);
+            return cmd_num;
+        }
+    } else { // 命令執行完畢
+        this->BlueOK();
+    }
+    return cmd_num;
 }
 //----------------------------------------------------------------
