@@ -5,74 +5,17 @@ By   : CharlotteHonG
 Final: 2017/04/17
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
-// 說明文檔
-void Help(){
-    /*
-    Command:
-      /ATM    AT Command Mode
-      /RE     Reboot to AutoLinkMode
-      /VH     Vcc ON
-      /VL     Vcc OFF
-      /KH     Key Power ON
-      /KL     Key Power OFF
-      /STA    Return Key and Vcc now static
-      /HELP   Return Help
-                By:Charlotte.HonG
-    */
-    Serial.println("Command:");
-    Serial.println("  /ATM    AT Command Mode");
-    Serial.println("  /RE     Reboot to AutoLinkMode");
-    Serial.println("  /VH     Vcc ON");
-    Serial.println("  /VL     Vcc OFF");
-    Serial.println("  /KH     Key Power ON");
-    Serial.println("  /KL     Key Power OFF");
-    Serial.println("  /STA    Return Key and Vcc now static");
-    Serial.println("  /HELP   Return Help");
-    Serial.println("            By:Charlotte.HonG");
-}
-//----------------------------------------------------------------
-Once::Once(): fp(nullptr), st(false){};
-Once::Once(fun_p callback): fp(callback), st(false){}
-// 只執行一次事後設定的
-void Once::go(fun_p callback){
-    if(st==false) {
-        st=true;
-        fp=callback;
-        fp();
-    }
-}
-// 只執行一次建構設定的
-void Once::go_set(){
-    if(st==false) {
-        st=true;
-        fp();
-    }
-}
-// 特化 BT_ATC 物件
-Once::Once(char const *str): cmdstr(str){}
-void Once::go_cmd(BT_ATC & rhs){
-    if(st==false) {
-        st=true;
-        rhs.BT_Uart.print(cmdstr);
-        rhs.BT_Uart.print("\r\n");
-    }
-}
-void Once::go_atm(BT_ATC & rhs, bool sta){
-    if(st==false) {
-        st=true;
-        rhs.AT_Mode(sta);
-    }
-}
-
-
-//----------------------------------------------------------------
-// 藍芽腳位初始化建構子
-BT_ATC::BT_pin::BT_pin(int rx, int tx, int vcc, int key):
-    rx(rx), tx(tx), vcc(vcc), key(key)
-{}
-
-
-//----------------------------------------------------------------
+#include "BT_ATC.hpp"
+/*
+     ######   ######              ##     ######     ####
+     ##   ##    ##                ##       ##      ##  ##
+     ##   ##    ##               ####      ##     ##
+     ######     ##               ## #      ##     ##
+     ##   ##    ##              ######     ##     ##
+     ##   ##    ##              ##   #     ##      ##  ##
+     ######     ##     ####### ###   ##    ##       ####
+    
+*/
 // 藍芽指令初始化建構子
 BT_ATC::BT_ATC(int rx, int tx, int vcc, int key):
     pin(rx, tx, vcc, key)
@@ -89,8 +32,17 @@ BT_ATC::BT_ATC(BT_pin pin) :pin(pin)
     pinMode(BT_Vcc, OUTPUT);
     this->pow(1);
 }
+//----------------------------------------------------------------
+// 設定頻率
 void BT_ATC::begin(size_t rate){
     BT_Uart.begin(rate);
+}
+// 查詢狀態
+void BT_ATC::Static(){
+    Serial.print("Key static = ");
+    Serial.println(digitalRead(pin.key));
+    Serial.print("Vcc static = ");
+    Serial.println(digitalRead(pin.vcc));
 }
 // 電源控制
 void BT_ATC::pow(bool sta){
@@ -98,32 +50,6 @@ void BT_ATC::pow(bool sta){
 }
 void BT_ATC::key(bool sta){
     digitalWrite(pin.key, sta);
-}
-// 進入AT模式
-void BT_ATC::AT_Mode(){
-    AT_Mode(true);
-}
-void BT_ATC::AT_Mode(bool sta){
-    pow(0);
-    key(1);
-    delay(3);
-    pow(1);
-    // 等待OK
-    Serial.println("Wait AT_Mode...");
-    delay(1000);
-
-    // 換成這樣莫名其妙的，底下命令 Cmder() 執行就出事
-    // while(!BlueOK(false)){
-    //     Serial.print(".");
-    //     delay(50);
-    //     BT_Uart.print("AT\r\n");
-    // }Serial.println("");
-
-
-    Serial.println("Now AT_Mode is ready.");
-    if(sta==0) {
-        key(0);
-    }
 }
 // 重新啟動
 void BT_ATC::Reboot(){
@@ -136,31 +62,32 @@ void BT_ATC::Reboot(){
     delay(1000);
     Serial.println("Now is ready.");
 }
-// 查詢狀態
-void BT_ATC::Static(){
-    Serial.print("Key static = ");
-    Serial.println(digitalRead(pin.key));
-    Serial.print("Vcc static = ");
-    Serial.println(digitalRead(pin.vcc));
+// 進入AT模式
+void BT_ATC::AT_Mode(){
+    AT_Mode(true);
 }
-// 傳輸
+//----------------------------------------------------------------
+// 讀取並發送 Seri --> bule
 void BT_ATC::SeriRead(){
     if (Serial.available()) {
         delay(3);
         BT_Uart.print(static_cast<char>(Serial.read()));
     }
 }
+// 讀取並發送 bule --> Seri
 void BT_ATC::BlueRead(){
     if (BT_Uart.available()) {
         delay(3);
         Serial.print(static_cast<char>(BT_Uart.read()));
     }
 }
+// 兩者互通
 void BT_ATC::Uart(){
     SeriRead();
     BlueRead();
 }
-// 執行命令
+//----------------------------------------------------------------
+// 命令集
 void BT_ATC::Cmds(){
     Serial.print("Cmd: ");
     String str = cmd;
@@ -275,5 +202,28 @@ size_t BT_ATC::Cmder(Once* hs, size_t len){
         BlueOK();
     }
     return cmd_num;
+}
+// 進入AT模式
+void BT_ATC::AT_Mode(bool sta){
+    pow(0);
+    key(1);
+    delay(3);
+    pow(1);
+    // 等待OK
+    Serial.println("Wait AT_Mode...");
+    delay(1000);
+
+    // 換成這樣莫名其妙的，底下命令 Cmder() 執行就出事
+    // while(!BlueOK(false)){
+    //     Serial.print(".");
+    //     delay(50);
+    //     BT_Uart.print("AT\r\n");
+    // }Serial.println("");
+
+
+    Serial.println("Now AT_Mode is ready.");
+    if(sta==0) {
+        key(0);
+    }
 }
 //----------------------------------------------------------------

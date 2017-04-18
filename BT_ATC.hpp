@@ -51,15 +51,14 @@ public:// 建構子
     BT_ATC(int rx, int tx, int vcc, int key);
     void begin(size_t rate);
 public:
+    void Static();      // 查詢狀態
     void pow(bool sta); // 電源控制
     void key(bool sta); // 電源控制
-    void AT_Mode();     // 進入AT模式(是否保持 KEY)
-    void AT_Mode(bool sta);
     void Reboot();      // 重新啟動
-    void Static();      // 查詢狀態
+    void AT_Mode();     // 進入AT模式(是否保持 KEY)
 public:
-    void SeriRead();    // 讀取並發送 Seri --> Seri
-    void BlueRead();    // 讀取並發送 bule --> bule
+    void SeriRead();    // 讀取並發送 Seri --> bule
+    void BlueRead();    // 讀取並發送 bule --> Seri
     void Uart();        // 兩者互通
 public:
     void Cmds();        // 命令集
@@ -67,6 +66,8 @@ public:
     bool BlueOK();      // 掃描藍芽 OK 確認命令有效
     bool BlueOK(bool NoPri);
     void Cmd_Uart();
+public:
+    void AT_Mode(bool sta);
     size_t Cmder(Once* hs, size_t len);
 // 資料成員
 public: 
