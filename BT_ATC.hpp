@@ -2,7 +2,7 @@
 Name : Blue_ATCommand
 Date : 2015/04/23
 By   : CharlotteHonG
-Final: 2017/04/17
+Final: 2017/04/19
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
 #ifndef BT_ATC_HPP
@@ -69,8 +69,6 @@ public:
     bool BlueOK(bool Pri);
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
-    void run_cmd(char* check_str);
-    void run_cmd(char* check_str, char* cmd_str2);
     void AT_Mode(bool sta);
     // 取得地址
     bool get_addr();
@@ -82,6 +80,9 @@ public:
     // 地定地址
     bool set_addr(char* addr);
     bool set_addr(char* addr, bool key_sta);
+public:
+    void run_cmd(char* check_str);
+    void run_cmd(char* check_str, char* cmd_str2);
 // 資料成員
 public: 
     BT_pin pin;               // 藍芽腳位

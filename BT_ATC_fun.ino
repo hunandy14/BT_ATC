@@ -2,7 +2,7 @@
 Name : Blue_ATCommand
 Date : 2015/04/23
 By   : CharlotteHonG
-Final: 2017/04/17
+Final: 2017/04/19
 軟件新版本：https://github.com/hunandy14/BT_ATC
 *****************************************************************/
 #include "BT_ATC.hpp"
@@ -216,31 +216,6 @@ void BT_ATC::Cmd_Uart(){
     #     # #    # #    # #      #   #
      #####  #    # #####  ###### #    #
 */
-// 執行並確認真好了
-void BT_ATC::run_cmd(char* cmd_str1){
-    run_cmd(cmd_str1, "");
-}
-void BT_ATC::run_cmd(char* cmd_str1, char* cmd_str2){
-    while(1){
-        BT_Uart.print("AT");
-        if(strlen(cmd_str1) != 0){
-            BT_Uart.print("+");
-            BT_Uart.print(cmd_str1);
-        }
-        else if(strlen(cmd_str2) != 0) {
-            BT_Uart.print(cmd_str1);
-            BT_Uart.print("=");
-            BT_Uart.print(cmd_str2);
-        }
-        BT_Uart.print("\r\n");
-        delay(50);
-        if(BlueOK(0)==1){
-            Serial.print(bt_msg);
-            break;
-        }
-        Serial.print(".");
-    }
-}
 // 進入AT模式
 void BT_ATC::AT_Mode(bool sta){
     this->pow(0);
@@ -249,44 +224,21 @@ void BT_ATC::AT_Mode(bool sta){
     this->pow(1);
     // 等待OK
     Serial.println("Wait AT_Mode...");
-    run_cmd("");
+    // 確認真好了
+    while(1){
+        BT_Uart.print("AT\r\n");
+        delay(50);
+        if(BlueOK(false)==1){
+            Serial.println("");
+            break;
+        }
+        Serial.print(".");
+    }
     Serial.println("Now AT_Mode is ready.");
     
     // 是否關閉KEY腳位
     if(sta==0){
         this->key(0);
-    }
-}
-// 特化 BT_ATC 物件
-Once::Once(char const *str): cmdstr(str){}
-void Once::go_cmd(BT_ATC & rhs){
-    if(st==false){
-        st=true;
-        delay(30);
-        rhs.BT_Uart.print("AT+");
-        rhs.BT_Uart.print(cmdstr);
-        rhs.BT_Uart.print("\r\n");
-    }
-}
-void Once::go_thiscmd(BT_ATC & rhs, char* thiscmd){
-    this->go_thiscmd(rhs, thiscmd, "");
-}
-void Once::go_thiscmd(BT_ATC & rhs, char* thiscmd, char* thiscmd2){
-    if(st==false){
-        st=true;
-        delay(30);
-        rhs.BT_Uart.print("AT+");
-        rhs.BT_Uart.print(thiscmd);
-        if(strlen(thiscmd2) != 0) {
-            rhs.BT_Uart.print(thiscmd2);
-        }
-        rhs.BT_Uart.print("\r\n");
-    }
-}
-void Once::go_atm(BT_ATC & rhs, bool sta){
-    if(st==false){
-        st=true;
-        rhs.AT_Mode(sta);
     }
 }
 // 無人職守響應執行命令
@@ -370,5 +322,31 @@ bool BT_ATC::set_addr(char* addr, bool key_sta){
             return 1;
     }
     return 0;
+}
+//----------------------------------------------------------------
+// 執行並確認真好了
+void BT_ATC::run_cmd(char* cmd_str1){
+    this->run_cmd(cmd_str1, "");
+}
+void BT_ATC::run_cmd(char* cmd_str1, char* cmd_str2){
+    while(1){
+        BT_Uart.print("AT");
+        if(strlen(cmd_str1) != 0){
+            BT_Uart.print("+");
+            BT_Uart.print(cmd_str1);
+        }
+        else if(strlen(cmd_str2) != 0) {
+            BT_Uart.print(cmd_str1);
+            BT_Uart.print("=");
+            BT_Uart.print(cmd_str2);
+        }
+        BT_Uart.print("\r\n");
+        delay(50);
+        if(BlueOK(0)==1){
+            Serial.print(bt_msg);
+            break;
+        }
+        Serial.print(".");
+    }
 }
 //----------------------------------------------------------------
