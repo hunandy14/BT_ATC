@@ -69,6 +69,8 @@ public:
     bool BlueOK(bool Pri);
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
+    void run_cmd(char* check_str);
+    void run_cmd(char* check_str, char* cmd_str2);
     void AT_Mode(bool sta);
     // 取得地址
     bool get_addr();

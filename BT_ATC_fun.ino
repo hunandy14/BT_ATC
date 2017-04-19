@@ -216,6 +216,31 @@ void BT_ATC::Cmd_Uart(){
     #     # #    # #    # #      #   #
      #####  #    # #####  ###### #    #
 */
+// 執行並確認真好了
+void BT_ATC::run_cmd(char* cmd_str1){
+    run_cmd(cmd_str1, "");
+}
+void BT_ATC::run_cmd(char* cmd_str1, char* cmd_str2){
+    while(1){
+        BT_Uart.print("AT");
+        if(strlen(cmd_str1) != 0){
+            BT_Uart.print("+");
+            BT_Uart.print(cmd_str1);
+        }
+        else if(strlen(cmd_str2) != 0) {
+            BT_Uart.print(cmd_str1);
+            BT_Uart.print("=");
+            BT_Uart.print(cmd_str2);
+        }
+        BT_Uart.print("\r\n");
+        delay(50);
+        if(BlueOK(0)==1){
+            Serial.print(bt_msg);
+            break;
+        }
+        Serial.print(".");
+    }
+}
 // 進入AT模式
 void BT_ATC::AT_Mode(bool sta){
     this->pow(0);
@@ -224,14 +249,9 @@ void BT_ATC::AT_Mode(bool sta){
     this->pow(1);
     // 等待OK
     Serial.println("Wait AT_Mode...");
-    delay(1000);
-    // 確認真好了
-    while(!BlueOK(false)){
-        Serial.print(".");
-        delay(500);
-        BT_Uart.print("AT\r\n");
-    }Serial.println("");
+    run_cmd("");
     Serial.println("Now AT_Mode is ready.");
+    
     // 是否關閉KEY腳位
     if(sta==0){
         this->key(0);

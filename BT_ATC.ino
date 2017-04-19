@@ -23,6 +23,10 @@ Once Master[]{
     "PSWD=0000",
     "ROLE=1",
     "CMODE=0",
+    "UART",
+    "PSWD",
+    "ROLE",
+    "CMODE",
     // 初始化
     "INIT"
 };
@@ -32,6 +36,11 @@ Once Slave[]{
     "PSWD=0000",
     "ROLE=0",
     "CMODE=1",
+    "NAME",
+    "UART",
+    "PSWD",
+    "ROLE",
+    "CMODE",
     // 初始化
     "INIT"
 };
