@@ -1,5 +1,5 @@
 /*****************************************************************
-Name : Blue_ATCommand Version 2.4.0
+Name : Blue_ATCommand Version 2.4.1
 Date1: 2015/04/23
 Date2: 2017/04/14
 By   : CharlotteHonG
@@ -78,5 +78,6 @@ void setup(){
 void loop(){
     // 開啟通訊
     hc05.Cmd_Uart();
+    // hc05M.Cmd_Uart();
 }
 //----------------------------------------------------------------
