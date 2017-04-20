@@ -21,8 +21,8 @@ BT_ATC::BT_ATC(int rx, int tx, int vcc, int key):
     pin(rx, tx, vcc, key),
     BT_Uart(pin.tx, pin.rx), cmd_num(0)
 {
-    pinMode(BT_Key, OUTPUT);
-    pinMode(BT_Vcc, OUTPUT);
+    pinMode(pin.key, OUTPUT);
+    pinMode(pin.vcc, OUTPUT);
     this->pow(1);
 }
 //----------------------------------------------------------------
@@ -74,7 +74,8 @@ void BT_ATC::AT_Mode(){
 void BT_ATC::SeriRead(){
     if(Serial.available()){
         delay(3);
-        this->BT_Uart.print(static_cast<char>(Serial.read()));
+        BT_Uart.listen();
+        BT_Uart.print(static_cast<char>(Serial.read()));
     }
 }
 // 讀取並發送 bule --> Seri
@@ -163,6 +164,7 @@ void BT_ATC::SeriScan(){
 
         // 沒有偵測到斜線轉送信息給藍芽
         if(strncmp(this->cmd,"/",1)){
+            BT_Uart.listen();
             BT_Uart.print(cmd);
         } else { // 偵測到斜線才執行命令
             this->Cmds();
@@ -226,6 +228,7 @@ void BT_ATC::AT_Mode(bool sta){
     Serial.println("Wait AT_Mode...");
     // 確認真好了
     while(1){
+        BT_Uart.listen();
         BT_Uart.print("AT\r\n");
         delay(50);
         if(BlueOK(false)==1){
@@ -330,6 +333,7 @@ void BT_ATC::run_cmd(char* cmd_str1){
 }
 void BT_ATC::run_cmd(char* cmd_str1, char* cmd_str2){
     while(1){
+        BT_Uart.listen();
         BT_Uart.print("AT");
         if(strlen(cmd_str1) != 0){
             BT_Uart.print("+");

@@ -72,6 +72,7 @@ void Once::go_cmd(BT_ATC & rhs){
     if(st==false){
         st=true;
         delay(30);
+        rhs.BT_Uart.listen();
         rhs.BT_Uart.print("AT+");
         rhs.BT_Uart.print(cmdstr);
         rhs.BT_Uart.print("\r\n");
@@ -84,6 +85,7 @@ void Once::go_thiscmd(BT_ATC & rhs, char* thiscmd, char* thiscmd2){
     if(st==false){
         st=true;
         delay(30);
+        rhs.BT_Uart.listen();
         rhs.BT_Uart.print("AT+");
         rhs.BT_Uart.print(thiscmd);
         if(strlen(thiscmd2) != 0) {
