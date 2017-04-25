@@ -26,8 +26,9 @@ auto& BT = hc05.BT_Uart; // use BT.print()
 
 // 命令設定
 Once Master[]{
+    "orgl",
     "NAME=CHG",
-    "UART=9600,0,0",
+    "UART=38400,0,0",
     "PSWD=0000",
     "ROLE=1",
     "CMODE=0",
@@ -39,6 +40,7 @@ Once Master[]{
     "INIT"
 };
 Once Slave[]{
+    "orgl",
     "NAME=CHG",
     "UART=38400,0,0",
     "PSWD=0000",
@@ -49,6 +51,7 @@ Once Slave[]{
     "PSWD",
     "ROLE",
     "CMODE",
+    "ADDR",
     // 初始化
     "INIT"
 };
@@ -65,19 +68,20 @@ void setup(){
     hc05.Static();
     hc05M.Static();
     // 自動輸入
-    hc05.Cmder(Slave, Oncelen(Slave));
-    hc05M.Cmder(Master, Oncelen(Master));
+    hc05.Cmder(Slave, Oncelen(Slave), 1);
+    hc05M.Cmder(Master, Oncelen(Master), 1);
     // 設定地址
     hc05.get_addr();
     hc05M.set_addr(hc05.address);
     // 重啟設備
     hc05.Reboot();
     hc05M.Reboot();
+    // 選擇通信通道
+    hc05.BT_Uart.listen();
 }
 //----------------------------------------------------------------
 void loop(){
     // 開啟通訊
     hc05.Cmd_Uart();
-    // hc05M.Cmd_Uart();
 }
 //----------------------------------------------------------------

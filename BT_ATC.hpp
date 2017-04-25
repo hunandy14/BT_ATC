@@ -70,19 +70,11 @@ public:
     void Cmd_Uart();    // 兩者互通並可接受關鍵字命令
 public:
     void AT_Mode(bool sta);
-    // 取得地址
-    bool get_addr();
-    bool get_addr(bool key_sta);
     // 無人職守響應執行命令
     size_t Cmder(Once* hs, size_t len);
-    size_t Cmder(Once* hs, size_t len, bool key_sta);
-    size_t Cmder(Once* hs, size_t len, bool key_sta, bool Pri);
-    // 地定地址
-    bool set_addr(char* addr);
-    bool set_addr(char* addr, bool key_sta);
-public:
-    void run_cmd(char* check_str);
-    void run_cmd(char* check_str, char* cmd_str2);
+    size_t Cmder(Once* hs, size_t len, bool Pri);
+    bool get_addr();           // 取得地址
+    bool set_addr(char* addr); // 設定地址
 // 資料成員
 public: 
     BT_pin pin;               // 藍芽腳位

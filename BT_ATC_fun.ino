@@ -244,12 +244,9 @@ void BT_ATC::AT_Mode(bool sta){
 }
 // 無人職守響應執行命令
 size_t BT_ATC::Cmder(Once* hs, size_t len){
-    this->Cmder(hs, len, 1, 0);
+    this->Cmder(hs, len, 0);
 }
-size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta){
-    this->Cmder(hs, len, key_sta, 0);
-}
-size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta, bool Pri){
+size_t BT_ATC::Cmder(Once* hs, size_t len, bool Pri){
     // 命令還沒執行完
     while(cmd_num < len){
         // 進入AT模式
@@ -272,8 +269,6 @@ size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta, bool Pri){
         // 執行完畢
         if(cmd_num == len){
             Serial.println("# CMD All ok");
-            if(key_sta==0)
-                this->key(0);
             return cmd_num;
         }
     }
@@ -281,11 +276,8 @@ size_t BT_ATC::Cmder(Once* hs, size_t len, bool key_sta, bool Pri){
 }
 // 獲取地址
 bool BT_ATC::get_addr(){
-    this->get_addr(1);
-}
-bool BT_ATC::get_addr(bool key_sta){
     // 還沒讀到地址
-    while(!strlen(address)) {
+    while(!strlen(address)){
         // 進入AT模式
         once_atm.go_atm((*this), 1);
         // 查找地址
@@ -307,9 +299,6 @@ bool BT_ATC::get_addr(bool key_sta){
 }
 // 設定地址
 bool BT_ATC::set_addr(char* addr){
-    return this->set_addr(addr, 1);
-}
-bool BT_ATC::set_addr(char* addr, bool key_sta){
     // 設定地址
     if(once_addset.st==1)
         return 0;
@@ -323,31 +312,5 @@ bool BT_ATC::set_addr(char* addr, bool key_sta){
             return 1;
     }
     return 0;
-}
-//----------------------------------------------------------------
-// 執行並確認真好了
-void BT_ATC::run_cmd(char* cmd_str1){
-    this->run_cmd(cmd_str1, "");
-}
-void BT_ATC::run_cmd(char* cmd_str1, char* cmd_str2){
-    while(1){
-        BT_Uart.print("AT");
-        if(strlen(cmd_str1) != 0){
-            BT_Uart.print("+");
-            BT_Uart.print(cmd_str1);
-        }
-        else if(strlen(cmd_str2) != 0) {
-            BT_Uart.print(cmd_str1);
-            BT_Uart.print("=");
-            BT_Uart.print(cmd_str2);
-        }
-        BT_Uart.print("\r\n");
-        delay(50);
-        if(BlueOK(0)==1){
-            Serial.print(bt_msg);
-            break;
-        }
-        Serial.print(".");
-    }
 }
 //----------------------------------------------------------------
